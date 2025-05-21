@@ -14,7 +14,7 @@ const paths = {
   html: "src/pages/**/*.html",
   js: "src/js/**/*.js",
   scss: "src/scss/**/*.scss",
-  dist: "public",
+  dist: "docs",
 };
 
 // .pipe(...)	Gulp hoạt động theo cơ chế streaming (dòng chảy), nên anh dùng .pipe() để truyền kết quả từ bước này sang bước khác
