@@ -16,24 +16,67 @@
     <div class="home-layout my-sm">
       <div class="container-main">
         <div class="content-wrapper grid gap-sm">
-          <div class="category-menu">
+          <nav class="relative category-menu">
             <ul class="category-list flex flex-col">
-              <li class="block py-xs"><a class="flex items-center justify-center text-u-none text-black text-md" href="/xe-dap-tre-em.html">Xe đạp trẻ em</a></li>
-              <li class="block py-xs"><a class="flex items-center justify-center text-u-none text-black text-md" href="/xe-dap-tre-em.html">Xe đạp trẻ em</a></li>
-              <li class="block py-xs"><a class="flex items-center justify-center text-u-none text-black text-md" href="/xe-dap-tre-em.html">Xe đạp trẻ em</a></li>
-              <li class="block py-xs"><a class="flex items-center justify-center text-u-none text-black text-md" href="/xe-dap-tre-em.html">Xe đạp trẻ em</a></li>
-              <li class="block py-xs"><a class="flex items-center justify-center text-u-none text-black text-md" href="/xe-dap-tre-em.html">Xe đạp trẻ em</a></li>
-              <li class="block py-xs"><a class="flex items-center justify-center text-u-none text-black text-md" href="/xe-dap-tre-em.html">Xe đạp trẻ em</a></li>
-              <li class="block py-xs"><a class="flex items-center justify-center text-u-none text-black text-md" href="/xe-dap-tre-em.html">Xe đạp trẻ em</a></li>
-              <li class="block py-xs"><a class="flex items-center justify-center text-u-none text-black text-md" href="/xe-dap-tre-em.html">Xe đạp trẻ em</a></li>
-              <li class="block py-xs"><a class="flex items-center justify-center text-u-none text-black text-md" href="/xe-dap-tre-em.html">Xe đạp trẻ em</a></li>
-              <li class="block py-xs"><a class="flex items-center justify-center text-u-none text-black text-md" href="/xe-dap-tre-em.html">Xe đạp trẻ em</a></li>
-              <li class="block py-xs"><a class="flex items-center justify-center text-u-none text-black text-md" href="/xe-dap-tre-em.html">Xe đạp trẻ em</a></li>
+              <li class="block py-xs">
+                <a class="menu-trigger flex items-center justify-between text-u-none text-black text-md px-sm" href="/xe-dap-tre-em.html">Xe đạp trẻ em</a>
+                <div class="submenu z-20 rounded-sm flex gap-md"></div>
+              </li>
+              <li class="block py-xs">
+                <a class="menu-trigger flex items-center justify-between text-u-none text-black text-md px-sm" href="/xe-dap-tre-em.html">Xe đạp thể thao</a>
+                <div class="submenu z-20 rounded-sm flex gap-md"></div>
+              </li>
+              <li class="block py-xs">
+                <a class="menu-trigger flex items-center justify-between text-u-none text-black text-md px-sm" href="/xe-dap-tre-em.html">Xe đạp địa hình</a>
+                <div class="submenu z-20 rounded-sm flex gap-md"></div>
+              </li>
+              <li class="block py-xs">
+                <a class="menu-trigger flex items-center justify-between text-u-none text-black text-md px-sm" href="/xe-dap-tre-em.html">Xe đạp touring</a>
+                <div class="submenu z-20 rounded-sm flex gap-md"></div>
+              </li>
+              <li class="block py-xs">
+                <a class="menu-trigger flex items-center justify-between text-u-none text-black text-md px-sm" href="/xe-dap-tre-em.html">Xe đạp đua</a>
+                <div class="submenu z-20 rounded-sm flex gap-md"></div>
+              </li>
+              <li class="block py-xs">
+                <a class="menu-trigger flex items-center justify-between text-u-none text-black text-md px-sm" href="/xe-dap-tre-em.html">Xe đạp phổ thông</a>
+                <div class="submenu z-20 rounded-sm flex gap-md"></div>
+              </li>
+              <li class="block py-xs">
+                <a class="menu-trigger flex items-center justify-between text-u-none text-black text-md px-sm" href="/xe-dap-tre-em.html">Xe điện</a>
+                <div class="submenu z-20 rounded-sm flex gap-md"></div>
+              </li>
+              <li class="block py-xs">
+                <a class="menu-trigger flex items-center justify-between text-u-none text-black text-md px-sm" href="/xe-dap-tre-em.html">Thương hiệu xe đạp</a>
+                <div class="submenu z-20 rounded-sm flex gap-md"></div>
+              </li>
+              <li class="block py-xs">
+                <a class="menu-trigger flex items-center justify-between text-u-none text-black text-md px-sm" href="/xe-dap-tre-em.html">Phụ kiện - Phụ tùng</a>
+                <div class="submenu z-20 rounded-sm flex gap-md"></div>
+              </li>
+              <li class="block py-xs">
+                <a class="menu-trigger flex items-center justify-between text-u-none text-black text-md px-sm" href="/xe-dap-tre-em.html">Chọn cấu hình xe</a>
+                <div class="submenu z-20 rounded-sm flex gap-md"></div>
+              </li>
+              <li class="block py-xs">
+                <a class="menu-trigger flex items-center justify-between text-u-none text-black text-md px-sm" href="/xe-dap-tre-em.html">🔥Khuyến mãi hot🔥</a>
+                <div class="submenu z-20 rounded-sm flex gap-md"></div>
+              </li>
             </ul>
-          </div>
+          </nav>
 
-          <div class="main-sliders flex items-center">
-            <img class="w-full rounded-sm" src="./img/slider1.jpg" alt="" />
+          <div class="main-sliders overflow-hidden relative">
+            <button class="slider-prev border-none p-sm absolute cursor-pointer left-4 text-white text-xl z-10">&lt;</button>
+            <button class="slider-next border-none p-sm absolute cursor-pointer right-4 text-white text-xl z-10">&gt;</button>
+            <div class="slider-container flex">
+              <img class="slider-image w-full rounded-sm" src="./img/slider1.jpg" alt="Slider 1" />
+              <img class="slider-image w-full rounded-sm" src="./img/slider2.jpg" alt="Slider 2" />
+              <img class="slider-image w-full rounded-sm" src="./img/slider3.jpg" alt="Slider 3" />
+              <img class="slider-image w-full rounded-sm" src="./img/slider4.jpg" alt="Slider 4" />
+              <img class="slider-image w-full rounded-sm" src="./img/slider5.jpg" alt="Slider 5" />
+              <img class="slider-image w-full rounded-sm" src="./img/slider6.jpg" alt="Slider 6" />
+              <img class="slider-image w-full rounded-sm" src="./img/slider7.jpg" alt="Slider 7" />
+            </div>
           </div>
 
           <div class="promo-banners flex flex-col justify-between">
@@ -41,6 +84,46 @@
             <img class="w-full rounded-sm" src="./img/promo2.jpg" alt="Promo Banner" />
             <img class="w-full rounded-sm" src="./img/promo3.jpg" alt="Promo Banner" />
           </div>
+        </div>
+
+        <!-- Product Category -->
+        <div class="category-section">
+          <div class="flex justify-between items-center my-lg">
+            <h2 class="category-title text-xl font-bold mb-lg text-mine-shaft">DANH MỤC SẢN PHẨM</h2>
+            <button class="view-more">Xem thêm</button>
+          </div>
+          <div class="category-list grid grid-cols-8 gap-sm my-lg" id="categoryList"></div>
+        </div>
+
+        <!-- Product List -->
+        <div class="products-section">
+          <div class="flex justify-between items-center my-lg">
+            <h2 class="products-title text-xl font-bold mb-lg text-mine-shaft">XE ĐẠP TRẺ EM</h2>
+            <div class="flex gap-sm">
+              <button class="view-more">Xem thêm</button>
+            </div>
+          </div>
+          <div class="product-list grid grid-cols-4 gap-sm my-lg" id="productList"></div>
+        </div>
+
+        <div class="products-section">
+          <div class="flex justify-between items-center my-lg">
+            <h2 class="products-title text-xl font-bold mb-lg text-mine-shaft">XE ĐẠP THỂ THAO</h2>
+            <div class="flex gap-sm">
+              <button class="view-more">Xem thêm</button>
+            </div>
+          </div>
+          <div class="product-list grid grid-cols-4 gap-sm my-lg" id="productList2"></div>
+        </div>
+
+        <div class="products-section">
+          <div class="flex justify-between items-center my-lg">
+            <h2 class="products-title text-xl font-bold mb-lg text-mine-shaft">XE ĐẠP ĐỊA HÌNH</h2>
+            <div class="flex gap-sm">
+              <button class="view-more">Xem thêm</button>
+            </div>
+          </div>
+          <div class="product-list grid grid-cols-4 gap-sm my-lg" id="productList3"></div>
         </div>
       </div>
     </div>
