@@ -1,28 +1,35 @@
-import includeHTML from "./utils/include.js";
+import headerFooter from "./utils/header-footer.js";
 import renderSubmenu from "./modules/nav.js";
-import Slider from "./modules/slider.js";
-import CategoryManager from "./modules/category.js";
-import ProductsManager from "./modules/products.js";
+import sliderModuleInstance from "./modules/slider.js";
+import categoryModuleInstance from "./modules/category.js";
+import productModule from "./modules/product.js";
+import cartModuleInstance from "./modules/cart.js";
+import lazyLoadImages from "./modules/lazy.js";
 
-class App {
-  async init() {
+class MainManager {
+  constructor() {
+    this.sliderManager = sliderModuleInstance;
+    this.categoryManager = categoryModuleInstance;
+    this.cartManager = cartModuleInstance;
+    this.productsManager = new productModule(this.cartManager);
+  }
+  async initManager() {
     try {
-      await includeHTML();
+      await headerFooter();
       renderSubmenu();
-      new Slider();
-      new CategoryManager().init();
-      const product1 = new ProductsManager();
-      product1.productList = document.getElementById("productList");
-      product1.init("Xe Đạp Trẻ Em");
 
-      const product2 = new ProductsManager();
-      product2.productList = document.getElementById("productList2");
-      product2.init("Xe Đạp Thể Thao");
-
-      const product3 = new ProductsManager();
-      product3.productList = document.getElementById("productList3");
-      product3.init("Xe Đạp Địa Hình");
-      
+      const productLists = [
+        { elementId: "productList", category: "Xe Đạp Trẻ Em" },
+        { elementId: "productList2", category: "Xe Đạp Thể Thao" },
+        { elementId: "productList3", category: "Xe Đạp Địa Hình" },
+        { elementId: "productList4", category: "Xe Đạp Đua" },
+        { elementId: "productList5", category: "Xe Đạp Touring" },
+        { elementId: "productList6", category: "Xe Đạp Nữ" },
+        { elementId: "productList7", category: "Xe Đạp Điện" },
+        { elementId: "productList8", category: "Xe Đạp Khác" },
+      ];
+      await this.productsManager.init(productLists);
+      lazyLoadImages();
     } catch (error) {
       console.error("Error loading HTML:", error);
     }
@@ -30,6 +37,6 @@ class App {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  const app = new App();
-  app.init();
+  const main = new MainManager();
+  main.initManager();
 });

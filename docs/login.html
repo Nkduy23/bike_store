@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đăng ký / Đăng nhập</title>
+    <link rel="stylesheet" href="./css/main.css" />
+  </head>
+  <body>
+    <div class="container-login">
+      <main class="auth">
+        <div class="auth__container">
+          <h2 class="auth__title">Đăng nhập</h2>
+          <form class="auth__form">
+            <div class="auth__group">
+              <label for="email">Email</label>
+              <input type="email" id="email" placeholder="example@gmail.com" required />
+            </div>
+            <div class="auth__group">
+              <label for="password">Mật khẩu</label>
+              <input type="password" id="password" placeholder="********" required />
+            </div>
+            <button type="submit" class="auth__button">Đăng nhập</button>
+          </form>
+
+          <p class="auth__switch">
+            Chưa có tài khoản?
+            <a href="#" id="switchToRegister">Đăng ký</a>
+          </p>
+        </div>
+
+        <div class="auth__container hidden" id="registerForm">
+          <h2 class="auth__title">Đăng ký</h2>
+          <form class="auth__form">
+            <div class="auth__group">
+              <label for="fullname">Họ và tên</label>
+              <input type="text" id="fullname" placeholder="Nguyễn Văn A" required />
+            </div>
+            <div class="auth__group">
+              <label for="emailReg">Email</label>
+              <input type="email" id="emailReg" placeholder="example@gmail.com" required />
+            </div>
+            <div class="auth__group">
+              <label for="passwordReg">Mật khẩu</label>
+              <input type="password" id="passwordReg" placeholder="********" required />
+            </div>
+            <button type="submit" class="auth__button">Đăng ký</button>
+          </form>
+
+          <p class="auth__switch">
+            Đã có tài khoản?
+            <a href="#" id="switchToLogin">Đăng nhập</a>
+          </p>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      const loginForm = document.querySelector(".auth__container");
+      const registerForm = document.getElementById("registerForm");
+      const switchToRegister = document.getElementById("switchToRegister");
+      const switchToLogin = document.getElementById("switchToLogin");
+
+      switchToRegister.addEventListener("click", (e) => {
+        e.preventDefault();
+        loginForm.classList.add("hidden");
+        registerForm.classList.remove("hidden");
+      });
+
+      switchToLogin.addEventListener("click", (e) => {
+        e.preventDefault();
+        registerForm.classList.add("hidden");
+        loginForm.classList.remove("hidden");
+      });
+    </script>
+  </body>
+</html>

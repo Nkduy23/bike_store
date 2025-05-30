@@ -1,5 +1,4 @@
-// modules/slider.js
-class Slider {
+class SliderModule {
   constructor() {
     this.sliderContainer = document.querySelector(".slider-container");
     this.images = document.querySelectorAll(".slider-image");
@@ -11,6 +10,7 @@ class Slider {
     this.isDragging = false;
     this.startX = 0;
     this.currentTranslate = 0;
+
     this.init();
   }
 
@@ -41,8 +41,8 @@ class Slider {
   }
 
   updateSlide() {
-    const offset = -this.currentIndex * 100; // Di chuyển theo phần trăm
-    this.currentTranslate = offset; // Lưu vị trí hiện tại
+    const offset = -this.currentIndex * 100;
+    this.currentTranslate = offset;
     this.sliderContainer.style.transform = `translateX(${this.currentTranslate}%)`;
   }
 
@@ -50,7 +50,7 @@ class Slider {
     e.preventDefault();
     this.isDragging = true;
     this.startX = e.type.includes("touch") ? e.touches[0].clientX : e.clientX;
-    this.sliderContainer.style.transition = "none"; // Tắt transition khi drag
+    this.sliderContainer.style.transition = "none";
     this.stopAutoSlide();
   }
 
@@ -66,14 +66,11 @@ class Slider {
     this.isDragging = false;
     const currentX = e.type.includes("touch") ? e.changedTouches[0].clientX : e.clientX;
     const diff = ((currentX - this.startX) / this.sliderContainer.offsetWidth) * 100;
-    if (diff > 10) this.prevSlide(); // Lướt sang trái (prev)
-    else if (diff < -10) this.nextSlide(); // Lướt sang phải (next)
-    this.sliderContainer.style.transition = "transform 0.5s ease"; // Bật lại transition
-    // this.updateSlide();
-    // this.startAutoSlide();
+    if (diff > 10) this.prevSlide();
+    else if (diff < -10) this.nextSlide();
+    this.sliderContainer.style.transition = "transform 0.5s ease";
   }
 
-  // Cập nhật addEventListeners()
   addEventListeners() {
     this.prevBtn.addEventListener("click", () => {
       this.stopAutoSlide();
@@ -115,4 +112,5 @@ class Slider {
   }
 }
 
-export default Slider;
+const sliderModuleInstance = new SliderModule();
+export default sliderModuleInstance;

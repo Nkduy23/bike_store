@@ -10,13 +10,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="./css/main.css" />
   </head>
-  <body class="text-base">
-    <div data-include="./partials/header.html"></div>
+  <body>
+    <div data-include="./partials/header.html" class="min-h-100"></div>
 
-    <div class="home-layout my-sm">
+    <div class="home-layout my-sm min-h-5400">
       <div class="container-main">
         <div class="content-wrapper grid gap-sm">
-          <nav class="relative category-menu">
+          <nav class="relative category-menu hidden md:block">
             <ul class="category-list flex flex-col">
               <li class="block py-xs">
                 <a class="menu-trigger flex items-center justify-between text-u-none text-black text-md px-sm" href="/xe-dap-tre-em.html">Xe đạp trẻ em</a>
@@ -65,70 +65,133 @@
             </ul>
           </nav>
 
-          <div class="main-sliders overflow-hidden relative">
+          <div class="main-sliders overflow-hidden relative w-full">
             <button class="slider-prev border-none p-sm absolute cursor-pointer left-4 text-white text-xl z-10">&lt;</button>
             <button class="slider-next border-none p-sm absolute cursor-pointer right-4 text-white text-xl z-10">&gt;</button>
-            <div class="slider-container flex">
-              <img class="slider-image w-full rounded-sm" src="./img/slider1.jpg" alt="Slider 1" />
-              <img class="slider-image w-full rounded-sm" src="./img/slider2.jpg" alt="Slider 2" />
-              <img class="slider-image w-full rounded-sm" src="./img/slider3.jpg" alt="Slider 3" />
-              <img class="slider-image w-full rounded-sm" src="./img/slider4.jpg" alt="Slider 4" />
-              <img class="slider-image w-full rounded-sm" src="./img/slider5.jpg" alt="Slider 5" />
-              <img class="slider-image w-full rounded-sm" src="./img/slider6.jpg" alt="Slider 6" />
-              <img class="slider-image w-full rounded-sm" src="./img/slider7.jpg" alt="Slider 7" />
+            <div class="slider-container w-full flex">
+              <!-- <img class="slider-image min-w-full rounded-sm" style="max-width: 698px; max-height: 427px" src="./img/slider1.jpg" alt="Slider 1" /> -->
+              <img class="slider-image min-w-full rounded-sm" src="./img/slider2.jpg" alt="Slider 2" />
+              <img class="slider-image min-w-full rounded-sm" src="./img/slider3.jpg" alt="Slider 3" />
+              <img class="slider-image min-w-full rounded-sm" src="./img/slider4.jpg" alt="Slider 4" />
+              <img class="slider-image min-w-full rounded-sm" src="./img/slider5.jpg" alt="Slider 5" />
+              <img class="slider-image min-w-full rounded-sm" src="./img/slider6.jpg" alt="Slider 6" />
+              <img class="slider-image min-w-full rounded-sm" src="./img/slider7.jpg" alt="Slider 7" />
             </div>
           </div>
 
-          <div class="promo-banners flex flex-col justify-between">
-            <img class="w-full rounded-sm" src="./img/promo1.jpg" alt="Promo Banner" />
-            <img class="w-full rounded-sm" src="./img/promo2.jpg" alt="Promo Banner" />
-            <img class="w-full rounded-sm" src="./img/promo3.jpg" alt="Promo Banner" />
+          <div class="promo-banners flex flex-col gap-sm w-full hidden md:block">
+            <img class="w-full h-auto rounded-sm" src="./img/promo1.jpg" alt="Promo Banner" />
+            <img class="w-full h-auto rounded-sm" src="./img/promo2.jpg" alt="Promo Banner" />
+            <img class="w-full h-auto rounded-sm" src="./img/promo3.jpg" alt="Promo Banner" />
           </div>
         </div>
 
         <!-- Product Category -->
         <div class="category-section">
           <div class="flex justify-between items-center my-lg">
-            <h2 class="category-title text-xl font-bold mb-lg text-mine-shaft">DANH MỤC SẢN PHẨM</h2>
+            <h2 class="category-title text-xl font-bold mb-lg text-mine-shaft px-sm">DANH MỤC SẢN PHẨM</h2>
             <button class="view-more">Xem thêm</button>
           </div>
-          <div class="category-list grid grid-cols-8 gap-sm my-lg" id="categoryList"></div>
+          <div class="category-list grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-sm px-sm my-lg" id="categoryList"></div>
         </div>
 
         <!-- Product List -->
         <div class="products-section">
           <div class="flex justify-between items-center my-lg">
-            <h2 class="products-title text-xl font-bold mb-lg text-mine-shaft">XE ĐẠP TRẺ EM</h2>
+            <h2 class="products-title text-xl font-bold mb-lg text-mine-shaft px-sm">XE ĐẠP TRẺ EM</h2>
             <div class="flex gap-sm">
-              <button class="view-more">Xem thêm</button>
+              <button class="view-more" style="min-height: 2rem">Xem thêm</button>
             </div>
           </div>
-          <div class="product-list grid grid-cols-4 gap-sm my-lg" id="productList"></div>
+
+          <div class="product-list grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-sm px-sm my-lg min-h-350" id="productList"></div>
         </div>
 
         <div class="products-section">
           <div class="flex justify-between items-center my-lg">
-            <h2 class="products-title text-xl font-bold mb-lg text-mine-shaft">XE ĐẠP THỂ THAO</h2>
+            <h2 class="products-title text-xl font-bold mb-lg text-mine-shaft px-sm">XE ĐẠP THỂ THAO</h2>
             <div class="flex gap-sm">
-              <button class="view-more">Xem thêm</button>
+              <button class="view-more" style="min-height: 2rem">Xem thêm</button>
             </div>
           </div>
-          <div class="product-list grid grid-cols-4 gap-sm my-lg" id="productList2"></div>
+          <div class="product-list grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-sm px-sm my-lg min-h-350" id="productList2"></div>
+        </div>
+
+        <div class="promo-banners flex flex-col justify-between">
+          <img class="w-full rounded-sm" src="./img/slider8.jpg" alt="Promo Banner" />
         </div>
 
         <div class="products-section">
           <div class="flex justify-between items-center my-lg">
-            <h2 class="products-title text-xl font-bold mb-lg text-mine-shaft">XE ĐẠP ĐỊA HÌNH</h2>
+            <h2 class="products-title text-xl font-bold mb-lg text-mine-shaft px-sm">XE ĐẠP ĐỊA HÌNH</h2>
             <div class="flex gap-sm">
-              <button class="view-more">Xem thêm</button>
+              <button class="view-more" style="min-height: 2rem">Xem thêm</button>
             </div>
           </div>
-          <div class="product-list grid grid-cols-4 gap-sm my-lg" id="productList3"></div>
+          <div class="product-list grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-sm px-sm my-lg min-h-350" id="productList3"></div>
+        </div>
+
+        <div class="products-section">
+          <div class="flex justify-between items-center my-lg">
+            <h2 class="products-title text-xl font-bold mb-lg text-mine-shaft px-sm">XE ĐẠP ĐUA</h2>
+            <div class="flex gap-sm">
+              <button class="view-more" style="min-height: 2rem">Xem thêm</button>
+            </div>
+          </div>
+          <div class="product-list grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-sm px-sm my-lg min-h-350" id="productList4"></div>
+        </div>
+
+        <div class="promo-banners flex flex-col justify-between">
+          <img class="w-full rounded-sm" src="./img/slider9.jpg" alt="Promo Banner" />
+        </div>
+
+        <div class="products-section">
+          <div class="flex justify-between items-center my-lg">
+            <h2 class="products-title text-xl font-bold mb-lg text-mine-shaft px-sm">XE ĐẠP TOURING</h2>
+            <div class="flex gap-sm">
+              <button class="view-more" style="min-height: 2rem">Xem thêm</button>
+            </div>
+          </div>
+          <div class="product-list grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-sm px-sm my-lg min-h-350" id="productList5"></div>
+        </div>
+
+        <div class="products-section">
+          <div class="flex justify-between items-center my-lg">
+            <h2 class="products-title text-xl font-bold mb-lg text-mine-shaft px-sm">XE ĐẠP NỮ</h2>
+            <div class="flex gap-sm">
+              <button class="view-more" style="min-height: 2rem">Xem thêm</button>
+            </div>
+          </div>
+          <div class="product-list grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-sm px-sm my-lg min-h-350" id="productList6"></div>
+        </div>
+
+        <div class="promo-banners flex flex-col justify-between">
+          <img class="w-full rounded-sm" src="./img/slider10.jpg" alt="Promo Banner" />
+        </div>
+
+        <div class="products-section">
+          <div class="flex justify-between items-center my-lg">
+            <h2 class="products-title text-xl font-bold mb-lg text-mine-shaft px-sm">XE ĐẠP ĐIỆN</h2>
+            <div class="flex gap-sm">
+              <button class="view-more" style="min-height: 2rem">Xem thêm</button>
+            </div>
+          </div>
+          <div class="product-list grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-sm px-sm my-lg min-h-350" id="productList7"></div>
+        </div>
+
+        <div class="products-section">
+          <div class="flex justify-between items-center my-lg">
+            <h2 class="products-title text-xl font-bold mb-lg text-mine-shaft px-sm">XE ĐẠP KHÁC</h2>
+            <div class="flex gap-sm">
+              <button class="view-more" style="min-height: 2rem">Xem thêm</button>
+            </div>
+          </div>
+          <div class="product-list grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-sm px-sm my-lg min-h-350" id="productList8"></div>
         </div>
       </div>
     </div>
 
-    <div data-include="./partials/footer.html"></div>
+    <div data-include="./partials/footer.html" class="min-h-100"></div>
 
     <script type="module" src="./js/main.js"></script>
   </body>

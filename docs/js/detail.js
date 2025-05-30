@@ -1,14 +1,16 @@
-import includeHTML from "./utils/include.js";
-import ProductDetail from "./modules/product-detail.js";
+import headerFooter from "./utils/header-footer.js";
+import DetailModule from "./modules/detail.js";
+import cartModuleInstance from "./modules/cart.js";
 
-class Detail {
+class DetailManager {
   constructor() {
-    this.productDetail = new ProductDetail();
+    this.cartManager = cartModuleInstance;
+    this.detailManager = new DetailModule(this.cartManager);
   }
   async initDetail() {
     try {
-      await includeHTML();
-      await this.productDetail.init();
+      await headerFooter();
+      await this.detailManager.init();
     } catch (error) {
       console.error("Error fetching product:", error);
     }
@@ -16,6 +18,6 @@ class Detail {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  const app = new Detail();
-  app.initDetail();
+  const detail = new DetailManager();
+  detail.initDetail();
 });

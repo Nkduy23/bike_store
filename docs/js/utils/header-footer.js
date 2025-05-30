@@ -1,4 +1,4 @@
-function includeHTML() {
+function headerFooter() {
   const includeElements = document.querySelectorAll("[data-include]");
   const promises = [];
 
@@ -19,8 +19,7 @@ function includeHTML() {
       });
     promises.push(promise);
   });
-
   return Promise.all(promises);
 }
 
-export default includeHTML;
+export default headerFooter;

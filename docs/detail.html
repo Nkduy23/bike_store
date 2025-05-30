@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chi Tiết Sản Phẩm</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./css/main.css" />
+  </head>
+  <body class="text-base">
+    <div data-include="./partials/header.html"></div>
+    <div class="container">
+      <div class="product-detail">
+        <div class="product-header">
+          <h1 class="product-title"></h1>
+          <div class="product-rating">
+            <div class="stars">
+              <span class="star">★</span>
+              <span class="star">★</span>
+              <span class="star">★</span>
+              <span class="star">★</span>
+              <span class="star">★</span>
+            </div>
+            <span class="rating-text"></span>
+          </div>
+        </div>
+
+        <div class="product-main">
+          <div class="image-section">
+            <div class="main-image-wrapper">
+              <img class="product-image" src="" alt="" />
+            </div>
+            <div class="thumbnail-gallery">
+              <img src="" alt="Hình 1" class="active" />
+              <img src="" alt="Hình 1" />
+              <img src="" alt="Hình 1" />
+              <!-- <video class="product-video" controls>
+                <source src="#" type="video/mp4" />
+                Video demo sản phẩm
+              </video> -->
+            </div>
+          </div>
+
+          <div class="info-section">
+            <div class="price-section">
+              <div>
+                <span class="product-priceSale"></span>
+                <span class="product-priceOriginal"></span>
+              </div>
+              <div class="discount-badge"></div>
+            </div>
+
+            <div class="product-info-grid">
+              <div class="info-item">
+                <div class="info-label">Thương hiệu</div>
+                <div class="info-value"></div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Kích thước</div>
+                <div class="info-value"></div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Tình trạng kho</div>
+                <div class="info-value"></div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Danh mục</div>
+                <div class="info-value"></div>
+              </div>
+            </div>
+
+            <div class="description"></div>
+
+            <div class="color-options">
+              <div class="option-title">Chọn màu sắc:</div>
+              <div class="color-grid">
+                <div class="color-option active"></div>
+                <div class="color-option"></div>
+                <div class="color-option"></div>
+              </div>
+            </div>
+
+            <div class="quantity-section">
+              <span class="option-title">Số lượng:</span>
+              <div class="quantity-selector">
+                <button class="quantity-btn quantity-decrease">-</button>
+                <input type="number" class="quantity-input" value="1" min="1" max="10" />
+                <button class="quantity-btn quantity-increase">+</button>
+              </div>
+            </div>
+
+            <div class="action-buttons">
+              <button class="btn btn-primary add-to-cart">Thêm vào giỏ hàng</button>
+              <button class="btn btn-secondary buy-now">Mua ngay</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="tabs-container">
+          <div class="tabs-nav">
+            <button class="tab-btn active" data-tab="tech-info">Thông tin kỹ thuật</button>
+            <button class="tab-btn" data-tab="reviews">Đánh giá & Bình luận</button>
+            <button class="tab-btn" data-tab="shipping">Vận chuyển & Bảo hành</button>
+          </div>
+
+          <div class="tab-content active" id="tech-info">
+            <h3>Thông tin kỹ thuật chi tiết</h3>
+            <table class="tech-table">
+              <tbody>
+                <tr>
+                  <th>Chất liệu</th>
+                  <td></td>
+                </tr>
+                <tr>
+                  <th>Trọng lượng</th>
+                  <td></td>
+                </tr>
+                <tr>
+                  <th>Độ tuổi phù hợp</th>
+                  <td></td>
+                </tr>
+                <tr>
+                  <th>Kích thước bánh xe</th>
+                  <td></td>
+                </tr>
+                <tr>
+                  <th>Loại phanh</th>
+                  <td></td>
+                </tr>
+                <tr>
+                  <th>Màu sắc</th>
+                  <td></td>
+                </tr>
+                <tr>
+                  <th>Xuất xứ</th>
+                  <td></td>
+                </tr>
+                <tr>
+                  <th>Bảo hành</th>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="tab-content" id="reviews">
+            <div class="comment-form">
+              <h4>Đánh giá sản phẩm</h4>
+              <div class="rating-input">
+                <span class="rating-star" data-rating="1">★</span>
+                <span class="rating-star" data-rating="2">★</span>
+                <span class="rating-star" data-rating="3">★</span>
+                <span class="rating-star" data-rating="4">★</span>
+                <span class="rating-star" data-rating="5">★</span>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Tên của bạn</label>
+                <input type="text" class="form-input" placeholder="Nhập tên của bạn" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Nội dung đánh giá</label>
+                <textarea class="form-textarea" placeholder="Chia sẻ trải nghiệm của bạn về sản phẩm..."></textarea>
+              </div>
+              <button class="btn btn-primary">Gửi đánh giá</button>
+            </div>
+
+            <div class="comments-list"></div>
+          </div>
+
+          <div class="tab-content" id="shipping">
+            <h3>Chính sách vận chuyển</h3>
+            <ul class="shipping-list" style="line-height: 2; margin: 20px 0"></ul>
+
+            <h3>Chính sách bảo hành</h3>
+            <ul class="warranty-list" style="line-height: 2; margin: 20px 0"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="related-products">
+      <h3 class="related-title">Sản phẩm liên quan</h3>
+      <div class="related-grid grid grid-cols-4"></div>
+    </div>
+
+    <div data-include="./partials/footer.html"></div>
+
+    <script type="module" src="./js/detail.js"></script>
+  </body>
+</html>

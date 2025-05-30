@@ -1,10 +1,10 @@
 import submenusData from "./submenusData.js";
+
 function renderSubmenu() {
   const menuTriggers = document.querySelectorAll(".menu-trigger");
 
-  // Kiểm tra số lượng menu trigger và submenusData khớp
   if (menuTriggers.length !== submenusData.length) {
-    console.error("Number of menu triggers and submenusData");
+    console.error("length not match");
     return;
   }
 
@@ -16,10 +16,8 @@ function renderSubmenu() {
       return;
     }
 
-    // Lấy dữ liệu submenu tương ứng
     const currentSubmenuData = submenusData[index];
 
-    // Tạo nội dung submenu
     currentSubmenuData.forEach((column) => {
       const ul = document.createElement("ul");
       const title = document.createElement("li");
@@ -39,7 +37,6 @@ function renderSubmenu() {
       submenu.appendChild(ul);
     });
 
-    // Lắng nghe sự kiện hover
     menuTrigger.addEventListener("mouseenter", () => {
       submenu.style.visibility = "visible";
     });
@@ -48,13 +45,12 @@ function renderSubmenu() {
       submenu.style.visibility = "hidden";
     });
 
-    // Sự kiện hover cho submenu
     submenu.addEventListener("mouseenter", () => {
-      submenu.style.visibility = "visible"; // Giữ hiển thị khi chuột vào submenu
+      submenu.style.visibility = "visible";
     });
 
     submenu.addEventListener("mouseleave", () => {
-      submenu.style.visibility = "hidden"; // Ẩn khi chuột rời khỏi submenu
+      submenu.style.visibility = "hidden";
     });
   });
 }
