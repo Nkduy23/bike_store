@@ -1,13 +1,15 @@
 class DetailModule {
-  constructor(cartManager) {
-    this.productApiUrl = "http://localhost:3000/products";
-    this.reviewsApiUrl = "http://localhost:3000/reviews";
-    this.ratingApiUrl = "http://localhost:3000/rating";
-    this.shippingApiUrl = "http://localhost:3000/shippingPolicies";
-    this.warrantyApiUrl = "http://localhost:3000/warrantyPolicies";
+  constructor(cartManager, dataService) {
+    this.dataService = dataService;
     this.product = null;
     this.relatedProducts = [];
+    this.reviews = [];
+    this.ratings = null;
+    this.shippingPolicy = null;
+    this.warrantyPolicy = null;
     this.selectedRating = 0;
+    this.inputQuantity = 1;
+    this.selectedColor = null;
     this.cartManager = cartManager;
   }
 
@@ -16,52 +18,24 @@ class DetailModule {
       const productId = new URLSearchParams(window.location.search).get("id");
 
       if (!productId) {
-        throw new Error("Product ID nit found in URL");
+        throw new Error("Product ID not found in URL");
       }
 
-      await this.fetchProduct(productId);
-      await this.fetchRelatedProducts(this.product.category, this.product.id);
+      this.product = await this.dataService.fetchProduct(productId);
+
+      const [relatedProducts, reviews, ratings, shippingPolicy, warrantyPolicy] = await Promise.all([this.dataService.fetchRelatedProducts(this.product.category, this.product.id), this.dataService.fetchReviews(productId), this.dataService.fetchRatings(productId), this.dataService.fetchShippingPolicy(this.product.shippingPolicyId), this.dataService.fetchWarrantyPolicy(this.product.warrantyPolicyId)]);
+
+      this.relatedProducts = relatedProducts;
+      this.reviews = reviews;
+      this.ratings = ratings;
+      this.shippingPolicy = shippingPolicy;
+      this.warrantyPolicy = warrantyPolicy;
+
       this.renderAll();
       this.addEventListeners();
-    } catch (error) {}
-  }
-
-  async fetchProduct(id) {
-    try {
-      const response = await fetch(`${this.productApiUrl}/${id}`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-
-      if (!response) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      this.product = await response.json();
-      if (!this.product) {
-        throw new Error("Product not found");
-      }
     } catch (error) {
-      console.error("Error fetching product:", error);
-      throw error;
-    }
-  }
-  async fetchRelatedProducts(category, currentProductId) {
-    try {
-      const response = await fetch(`${this.productApiUrl}`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      this.products = await response.json();
-      this.relatedProducts = this.products.filter((p) => p.category === category && p.id !== currentProductId).slice(0, 4);
-    } catch (error) {
-      console.error("Error fetching related product: ", error);
-      this.relatedProducts = [];
+      console.error("Error initializing detail page:", error);
+      alert("Có lỗi khi tải trang chi tiết. Vui lòng thử lại!");
     }
   }
 
@@ -120,9 +94,11 @@ class DetailModule {
     const colorOptions = document.querySelectorAll(".color-option");
     colorOptions.forEach((option, index) => {
       option.style.background = this.product.colors[index];
+      option.setAttribute("data-color", this.product.colors[index]);
       option.addEventListener("click", () => {
         colorOptions.forEach((o) => o.classList.remove("active"));
         option.classList.add("active");
+        this.selectedColor = option.getAttribute("data-color");
       });
     });
   }
@@ -136,6 +112,7 @@ class DetailModule {
       const currentValue = parseInt(inputQuantity.value);
       if (currentValue > 1) {
         inputQuantity.value = currentValue - 1;
+        this.inputQuantity = Number(inputQuantity.value);
       }
     });
 
@@ -144,6 +121,7 @@ class DetailModule {
       const maxStock = parseInt(inputQuantity.max);
       if (currentValue < maxStock) {
         inputQuantity.value = currentValue + 1;
+        this.inputQuantity = Number(inputQuantity.value);
       }
     });
 
@@ -154,6 +132,8 @@ class DetailModule {
 
       if (value < min) inputQuantity.value = min;
       if (value > max) inputQuantity.value = max;
+
+      this.inputQuantity = Number(inputQuantity.value);
     });
   }
 
@@ -189,7 +169,7 @@ class DetailModule {
 
   comment() {
     const commentsList = document.querySelector(".comments-list");
-    const comments = this.product.reviews;
+    const comments = this.reviews;
 
     comments.forEach((review) => {
       const commentItem = document.createElement("div");
@@ -235,8 +215,8 @@ class DetailModule {
     const shippingList = document.querySelector(".shipping-list");
     const warrantyList = document.querySelector(".warranty-list");
 
-    if (this.product.shipping) {
-      this.product.shipping.details.forEach((item) => {
+    if (this.shippingPolicy && this.shippingPolicy.details) {
+      this.shippingPolicy.details.forEach((item) => {
         const listItem = document.createElement("li");
         listItem.textContent = item;
         shippingList.appendChild(listItem);
@@ -247,8 +227,8 @@ class DetailModule {
       shippingList.appendChild(listItem);
     }
 
-    if (this.product.warranty) {
-      this.product.warranty.details.forEach((item) => {
+    if (this.warrantyPolicy && this.warrantyPolicy.details) {
+      this.warrantyPolicy.details.forEach((item) => {
         const listItem = document.createElement("li");
         listItem.textContent = item;
         warrantyList.appendChild(listItem);
@@ -283,6 +263,8 @@ class DetailModule {
 
   highlightStars(rating) {
     const ratingStars = document.querySelectorAll(".rating-star");
+    console.log(ratingStars);
+
     ratingStars.forEach((star, index) => {
       if (index < rating) {
         star.classList.add("active");
@@ -336,17 +318,23 @@ class DetailModule {
 
   addEventListeners() {
     const pageCart = document.querySelector(".add-to-cart");
-    pageCart.addEventListener("click", async (e) => {
-      e.stopPropagation();
-      const product = this.product;
-      try {
-        await this.cartManager.addToCart(product, 1, null, false);
-        window.location.href = "cart.html";
-      } catch (error) {
-        console.error("Error adding to cart:", error);
-        alert("Có lỗi khi thêm vào giỏ hàng. Vui lòng thử lại!");
-      }
-    });
+    if (pageCart) {
+      pageCart.addEventListener("click", async (e) => {
+        e.stopPropagation();
+        const product = this.product;
+        try {
+          if (!this.selectedColor && product.colors && product.colors.length > 0) {
+            alert("Vui lòng chọn màu sắc trước khi thêm vào giỏ hàng!");
+            return;
+          }
+          await this.cartManager.addToCart(product, this.inputQuantity, this.selectedColor, true); // isFromDetail = true
+          window.location.href = "cart.html";
+        } catch (error) {
+          console.error("Error adding to cart:", error);
+          alert("Có lỗi khi thêm vào giỏ hàng. Vui lòng thử lại!");
+        }
+      });
+    }
   }
 }
 

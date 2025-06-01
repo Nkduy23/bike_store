@@ -86,7 +86,12 @@ class ProductModule {
             </div>
           `
       }
+      <div class="color-selection">
+              <div class="color-options" data-product-id="${product.id}">
+                ${product.colors.map((color) => `<div class="color-option" data-color="${color}" style="background: ${color};"></div>`).join("")}
+      </div>
 
+      </div>
       <button 
         class="add-to-cart" 
         data-product-id="${product.id}" 
@@ -118,13 +123,33 @@ class ProductModule {
         e.stopPropagation();
         const productId = button.getAttribute("data-product-id");
         const product = this.products.find((p) => p.id == productId);
+
+        const colorOptions = button.parentElement.querySelectorAll(".color-option");
+        const selectedColor = Array.from(colorOptions)
+          .find((option) => option.classList.contains("active"))
+          ?.getAttribute("data-color");
+
         try {
-          await this.cartManager.addToCart(product, 1, null, false);
+          if (!selectedColor && product.colors && product.colors.length > 0) {
+            alert("Vui lòng chọn màu sắc trước khi thêm vào giỏ hàng!");
+            return;
+          }
+          await this.cartManager.addToCart(product, 1, selectedColor, false);
           window.location.href = "cart.html";
         } catch (error) {
           console.error("Error adding to cart:", error);
           alert("Có lỗi khi thêm vào giỏ hàng. Vui lòng thử lại!");
         }
+      });
+    });
+
+    const colorOptions = document.querySelectorAll(".color-option");
+    colorOptions.forEach((option) => {
+      option.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const siblings = option.parentElement.querySelectorAll(".color-option");
+        siblings.forEach((o) => o.classList.remove("active"));
+        option.classList.add("active");
       });
     });
   }

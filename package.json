@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "gulp",
+    "dev": "gulp && open http://127.0.0.1:5500/docs/index.html",
     "build": "gulp build",
-    "server": "json-server --watch ./src/data/db.json"
+    "server": "json-server --watch ./src/data/db.json",
+    "open-docs": "open http://127.0.0.1:5500/docs/index.html"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +20,7 @@
     "gulp": "^5.0.0",
     "gulp-postcss": "^10.0.0",
     "gulp-sass": "^6.0.1",
+    "open": "^10.1.2",
     "postcss": "^8.5.3",
     "sass": "^1.89.0"
   },
