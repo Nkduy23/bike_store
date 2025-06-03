@@ -21,9 +21,9 @@ class DetailModule {
         throw new Error("Product ID not found in URL");
       }
 
-      this.product = await this.dataService.fetchProduct(productId);
+      this.product = await this.dataService.fetchProducts(productId);
 
-      const [relatedProducts, reviews, ratings, shippingPolicy, warrantyPolicy] = await Promise.all([this.dataService.fetchRelatedProducts(this.product.category, this.product.id), this.dataService.fetchReviews(productId), this.dataService.fetchRatings(productId), this.dataService.fetchShippingPolicy(this.product.shippingPolicyId), this.dataService.fetchWarrantyPolicy(this.product.warrantyPolicyId)]);
+      const [relatedProducts, reviews, ratings, shippingPolicy, warrantyPolicy] = await Promise.all([this.dataService.fetchRelatedProducts(this.product.category, this.product.id), this.dataService.fetchReviews(productId), this.dataService.fetchRatings(productId), this.dataService.fetchShippingPolicies(this.product.shippingPolicyId), this.dataService.fetchWarrantyPolicies(this.product.warrantyPolicyId)]);
 
       this.relatedProducts = relatedProducts;
       this.reviews = reviews;

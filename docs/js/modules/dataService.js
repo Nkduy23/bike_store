@@ -1,16 +1,55 @@
+// /modules/dataService.js
 class DataService {
   constructor() {
     this.baseUrl = "http://localhost:3000";
   }
 
-  async fetchProduct(productId) {
+  async fetchCategories() {
+    try {
+      const response = await fetch(`${this.baseUrl}/categories`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const categories = await response.json();
+      return categories.length ? categories : [];
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      return [];
+    }
+  }
+
+  async fetchAllProducts() {
+    try {
+      const response = await fetch(`${this.baseUrl}/products`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const products = await response.json();
+      return products.length ? products : [];
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      return [];
+    }
+  }
+  
+  async fetchProducts(productId) {
     try {
       const response = await fetch(`${this.baseUrl}/products/${productId}`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });
       if (!response.ok) {
-        throw new Error(`HTTP console.error status: ${response.status}`);
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
       const product = await response.json();
       if (!product) {
@@ -19,6 +58,25 @@ class DataService {
       return product;
     } catch (error) {
       console.error("Error fetching product:", error);
+    }
+  }
+
+  async fetchAllReviews() {
+    try {
+      const response = await fetch(`${this.baseUrl}/reviews`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const reviews = await response.json();
+      return reviews.length ? reviews : [];
+    } catch (error) {
+      console.error("Error fetching reviews:", error);
+      return [];
     }
   }
 
@@ -37,6 +95,25 @@ class DataService {
       return reviews.length ? reviews : [];
     } catch (error) {
       console.error("Error fetching reviews:", error);
+      return [];
+    }
+  }
+
+  async fetchAllRatings() {
+    try {
+      const response = await fetch(`${this.baseUrl}/ratings`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const ratings = await response.json();
+      return ratings.length ? ratings : [];
+    } catch (error) {
+      console.error("Error fetching ratings:", error);
       return [];
     }
   }
@@ -60,7 +137,26 @@ class DataService {
     }
   }
 
-  async fetchShippingPolicy(policyId) {
+  async fetchAllShippingPolicies() {
+    try {
+      const response = await fetch(`${this.baseUrl}/shippingPolicies`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const shippingPolicies = await response.json();
+      return shippingPolicies.length ? shippingPolicies : [];
+    } catch (error) {
+      console.error("Error fetching shipping policies:", error);
+      return [];
+    }
+  }
+
+  async fetchShippingPolicies(policyId) {
     try {
       const response = await fetch(`${this.baseUrl}/shippingPolicies/${policyId}`, {
         method: "GET",
@@ -79,7 +175,26 @@ class DataService {
     }
   }
 
-  async fetchWarrantyPolicy(policyId) {
+  async fetchAllWarrantyPolicies() {
+    try {
+      const response = await fetch(`${this.baseUrl}/warrantyPolicies`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const warrantyPolicies = await response.json();
+      return warrantyPolicies.length ? warrantyPolicies : [];
+    } catch (error) {
+      console.error("Error fetching warranty policies:", error);
+      return [];
+    }
+  }
+
+  async fetchWarrantyPolicies(policyId) {
     try {
       const response = await fetch(`${this.baseUrl}/warrantyPolicies/${policyId}`, {
         method: "GET",
@@ -148,8 +263,8 @@ class DataService {
         body: JSON.stringify(newUser),
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      if (!postResponse.ok) {
+        throw new Error(`HTTP error! status: ${postResponse.status}`);
       }
 
       return await postResponse.json();
@@ -173,14 +288,29 @@ class DataService {
       }
       return user;
     } catch (error) {
-      // console.error("Error logging in:", error);
-      // Nếu lỗi do fetch hoặc lỗi không xác định → trả về thông báo chung
       if (error instanceof TypeError || error.message === "Failed to fetch") {
         throw new Error("Something went wrong. Please try again later.");
       }
-
-      // Nếu lỗi đã rõ ràng như "User not found" hoặc "Invalid password"
       throw error;
+    }
+  }
+
+  async fetchUsers() {
+    try {
+      const response = await fetch(`${this.baseUrl}/users`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const users = await response.json();
+      return users.length ? users : [];
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      return [];
     }
   }
 }

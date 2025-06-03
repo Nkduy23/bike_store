@@ -79,7 +79,7 @@
             </div>
           </div>
 
-          <div class="promo-banners flex flex-col gap-sm w-full hidden md:block">
+          <div class="promo-banners flex flex-col gap-sm w-full hidden md:flex">
             <img class="w-full h-auto rounded-sm" src="./img/promo1.jpg" alt="Promo Banner" />
             <img class="w-full h-auto rounded-sm" src="./img/promo2.jpg" alt="Promo Banner" />
             <img class="w-full h-auto rounded-sm" src="./img/promo3.jpg" alt="Promo Banner" />
@@ -92,7 +92,7 @@
             <h2 class="category-title text-xl font-bold mb-lg text-mine-shaft px-sm">DANH MỤC SẢN PHẨM</h2>
             <button class="view-more">Xem thêm</button>
           </div>
-          <div class="category-list grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-sm px-sm my-lg" id="categoryList"></div>
+          <div class="category-list grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-sm px-sm my-lg" id="categoryList"></div>
         </div>
 
         <!-- Product List -->
@@ -188,9 +188,16 @@
           </div>
           <div class="product-list grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-sm px-sm my-lg min-h-350" id="productList8"></div>
         </div>
+
+        <!-- Brand -->
+        <!-- <div class="category-section">
+          <div class="flex justify-between items-center my-lg">
+            <h2 class="category-title text-xl font-bold mb-lg text-mine-shaft px-sm">THƯƠNG HIỆU</h2>
+          </div>
+          <div class="category-list grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-sm px-sm my-lg" id="brandList"></div>
+        </div> -->
       </div>
     </div>
-
     <div data-include="./partials/footer.html" class="min-h-100"></div>
 
     <script type="module" src="./js/main.js"></script>

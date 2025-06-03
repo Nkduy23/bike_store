@@ -1,25 +1,19 @@
+import dataService from "./dataService.js";
 class CategoryModule {
-  constructor() {
+  constructor(dataService) {
     this.categorieList = document.getElementById("categoryList");
-    this.apiUrl = "http://localhost:3000/categories";
+    this.dataService = dataService;
+    this.categories = null;
     this.init();
   }
 
   async init() {
     try {
-      await this.fetchCategories();
+      this.categories = await dataService.fetchCategories();
       this.renderCategories();
     } catch (error) {
       console.error("Error fetching categories:", error);
     }
-  }
-
-  async fetchCategories() {
-    const response = await fetch(this.apiUrl);
-    if (!response.ok) {
-      throw new Error("Failed to fetch categories");
-    }
-    this.categories = await response.json();
   }
 
   renderCategories() {
@@ -29,8 +23,8 @@ class CategoryModule {
       categoryItem.className = "category-item";
       categoryItem.innerHTML = `
       <div 
-        class="category-box flex flex-col items-center justify-between gap-sm cursor-pointer p-sm border border-gray-200 rounded hover:shadow transition"
-        style="aspect-ratio: 1 / 1; min-height: 8rem; box-sizing: border-box;"
+        class="category-box flex flex-col items-center gap-sm cursor-pointer p-sm"
+        style="aspect-ratio: 1 / 1; min-height: 8rem;"
       >
         <img 
           src="${category.image}" 
@@ -61,5 +55,5 @@ class CategoryModule {
   }
 }
 
-const categoryModuleInstance = new CategoryModule();
+const categoryModuleInstance = new CategoryModule(dataService);
 export default categoryModuleInstance;
