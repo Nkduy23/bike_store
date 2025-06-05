@@ -1,6 +1,6 @@
 // /admin.js
-import adminInstance from "./modules/admin.js";
-import DataService from "./modules/dataService.js";
+import adminInstance from "./modules/admin-module.js";
+import DataService from "./modules/fetch-module.js";
 
 class AdminManager {
   constructor() {

@@ -1,6 +1,6 @@
 import "./utils/header-footer.js";
-import AuthModule from "./modules/auth.js";
-import DataService from "./modules/dataService.js";
+import AuthModule from "./modules/auth-module.js";
+import DataService from "./modules/fetch-module.js";
 import headerFooter from "./utils/header-footer.js";
 
 class AuthManager {

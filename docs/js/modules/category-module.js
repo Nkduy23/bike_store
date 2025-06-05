@@ -24,7 +24,7 @@ class CategoryModule {
         class="category-box flex flex-col items-center gap-size-1 cursor-pointer p-size-1"
         style="aspect-ratio: 1 / 1; min-height: 8rem;"
       >
-        <img 
+        <img
           src="${category.image}" 
           alt="${category.name}" 
           style="width: 60%; aspect-ratio: 1 / 1; object-fit: contain;"

@@ -23,6 +23,24 @@ class DataService {
     }
   }
 
+  async fetchSubMenu() {
+    try {
+      const response = await fetch(`${this.baseUrl}/submenus`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const submenus = await response.json();
+      return submenus.length ? submenus : [];
+    } catch (error) {
+      console.error("Error fetching submenus:", error);
+    }
+  }
+
   async fetchCategories() {
     try {
       const response = await fetch(`${this.baseUrl}/categories`, {

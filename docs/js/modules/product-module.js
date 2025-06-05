@@ -45,64 +45,54 @@ class ProductModule {
       list.element.innerHTML = displayedProducts
         .map(
           (product) => `
-    <div 
-      class="product-item flex flex-col gap-size-1 items-center" 
-      data-product-id="${product.id}" 
-      style="width: 100%; min-height: 28rem; padding: 1rem; box-sizing: border-box;"
-    >
-      <img 
-        data-src="${product.image}" 
-        alt="${product.name}" 
-        style="width: 100%; aspect-ratio: 3 / 2; object-fit: cover; border-radius: 0.25rem;" 
-        class="lazy"
-      >
-      
-      <div 
-        class="product-name" 
-        style="min-height: 3rem; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; margin-top: 0.5rem;"
-      >
-        ${product.name}
-      </div>
+            <div 
+            class="product-item relative flex flex-col gap-size-1 items-center p-size-1 text-center cursor-pointer" 
+            data-product-id="${product.id}">
+              <img 
+                data-src="${product.image}" 
+                alt="${product.name}" 
+                class="lazy w-full max-h-200 img-cover rounded-size-1"
+              >
+              <div class="product-name min-h-size-15">
+                ${product.name} 
+              </div>
 
-      ${
-        product.priceSale
-          ? `
-            <div 
-              class="product-prices flex gap-size-1 justify-center" 
-              style="min-height: 2rem; margin-top: 0.5rem;"
-            >
-              <div class="product-priceSale" style="color: red; font-weight: bold;">
-                ${product.priceSale.toLocaleString()}đ
-              </div>
-              <div class="product-priceOld" style="color: gray; text-decoration: line-through;">
-                ${product.priceOriginal.toLocaleString()}đ
-              </div>
-            </div>
-          `
-          : `
-            <div 
-              class="product-price" 
-              style="min-height: 2rem; color: #333; margin-top: 0.5rem;"
-            >
-              ${product.priceOriginal.toLocaleString()}đ
-            </div>
-          `
-      }
-      <div class="color-selection">
-              <div class="color-options" data-product-id="${product.id}">
+              ${
+                product.priceSale
+                  ? `
+                    <div 
+                      class="product-prices flex gap-size-1 justify-center  min-h-size-15" 
+                    >
+                      <div class="product-priceSale min-h-size-15">
+                        ${product.priceSale.toLocaleString()}đ
+                      </div>
+                      <div class="product-priceOld min-h-size-15">
+                        ${product.priceOriginal.toLocaleString()}đ
+                      </div>
+                    </div>
+                    <div class="product-labelSale">-25%</div>
+                  `
+                  : `
+                    <div 
+                      class="product-price  min-h-size-15"
+                    >
+                      ${product.priceOriginal.toLocaleString()}đ
+                    </div>
+                  `
+              }
+              <div class="color-selection" style ="min-height: 3rem ">
+                <div class="color-options" data-product-id="${product.id}">
                 ${product.colors.map((color) => `<div class="color-option" data-color="${color}" style="background: ${color};"></div>`).join("")}
-      </div>
-
-      </div>
-      <button 
-        class="add-to-cart" 
-        data-product-id="${product.id}" 
-        style="min-height: 2.5rem; background-color: #007bff; color: white; border: none; padding: 0.5rem 1rem; cursor: pointer; margin-top: 0.75rem;"
-      >
-        Mua ngay
-      </button>
-    </div>
-  `
+              </div>
+              </div>
+              <button 
+                class="add-to-cart" 
+                data-product-id="${product.id}" 
+              >
+                Mua ngay
+              </button>
+            </div>
+          `
         )
         .join("");
     });
