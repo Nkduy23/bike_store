@@ -1,6 +1,6 @@
 import headerFooterInstance from "./utils/header-footer.js";
-import cartModuleInstance from "./modules/cart-module.js";
-import DataServiceInstance from "./modules/fetch-module.js";
+import cartModuleInstance from "./modules/cart.module.js";
+import DataServiceInstance from "./modules/fetch.module.js";
 
 class CartManager {
   constructor() {

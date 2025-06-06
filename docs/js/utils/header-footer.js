@@ -1,4 +1,4 @@
-class HeaderFooter {
+class HeaderFooterModule {
   constructor() {
     this.includeElements = document.querySelectorAll("[data-include]");
   }
@@ -20,5 +20,5 @@ class HeaderFooter {
   }
 }
 
-const headerFooterInstance = new HeaderFooter();
-export default headerFooterInstance;
+const headerFooter = new HeaderFooterModule();
+export default headerFooter;

@@ -105,89 +105,47 @@
           </div>
 
           <div class="product-list grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-size-1 px-size-1 my-size-2 min-h-350" id="productList"></div>
-        </div>
 
-        <div class="products-section min-h-460">
           <div class="flex justify-between items-center my-size-2">
             <h2 class="products-title text-size-3 font-bold mb-size-2 text-mine-shaft px-size-1">Xe Đạp Thể Thao</h2>
             <div class="flex gap-size-1">
               <button class="view-more" style="min-height: 2rem">Xem thêm</button>
             </div>
           </div>
+
           <div class="product-list grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-size-1 px-size-1 my-size-2 min-h-350" id="productList2"></div>
+
+          <!-- Template cho product-item -->
+          <template id="productTemplate">
+            <div class="product-item relative flex flex-col gap-size-1 items-center p-size-1 text-center cursor-pointer">
+              <img class="lazy w-full max-h-200 img-cover rounded-size-1" alt="" />
+              <div class="product-name min-h-size-15"></div>
+              <div class="product-prices flex gap-size-1 justify-center min-h-size-15">
+                <div class="product-priceSale min-h-size-15"></div>
+                <div class="product-priceOld min-h-size-15"></div>
+              </div>
+              <div class="product-price min-h-size-15"></div>
+              <div class="product-labelSale"></div>
+              <div class="color-selection" style="min-height: 3rem">
+                <div class="color-options"></div>
+              </div>
+              <button class="add-to-cart">Mua ngay</button>
+            </div>
+          </template>
         </div>
 
-        <div class="promo-banners flex flex-col justify-between">
+        <!-- <div class="promo-banners flex flex-col justify-between">
           <img class="w-full rounded-size-1" src="./img/slider/slider8.jpg" alt="Promo Banner" />
-        </div>
+        </div> -->
 
-        <div class="products-section min-h-460">
-          <div class="flex justify-between items-center my-size-2">
-            <h2 class="products-title text-size-3 font-bold mb-size-2 text-mine-shaft px-size-1">Xe Đạp Địa Hình</h2>
-            <div class="flex gap-size-1">
-              <button class="view-more" style="min-height: 2rem">Xem thêm</button>
-            </div>
-          </div>
-          <div class="product-list grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-size-1 px-size-1 my-size-2 min-h-350" id="productList3"></div>
-        </div>
-
-        <div class="products-section min-h-460">
-          <div class="flex justify-between items-center my-size-2">
-            <h2 class="products-title text-size-3 font-bold mb-size-2 text-mine-shaft px-size-1">Xe Đạp Đua</h2>
-            <div class="flex gap-size-1">
-              <button class="view-more" style="min-height: 2rem">Xem thêm</button>
-            </div>
-          </div>
-          <div class="product-list grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-size-1 px-size-1 my-size-2 min-h-350" id="productList4"></div>
-        </div>
-
-        <div class="promo-banners flex flex-col justify-between">
+        <!-- <div class="promo-banners flex flex-col justify-between">
           <img class="w-full rounded-size-1" src="./img/slider/slider9.jpg" alt="Promo Banner" />
-        </div>
+        </div> -->
 
-        <div class="products-section min-h-460">
-          <div class="flex justify-between items-center my-size-2">
-            <h2 class="products-title text-size-3 font-bold mb-size-2 text-mine-shaft px-size-1">Xe Đạp Touring</h2>
-            <div class="flex gap-size-1">
-              <button class="view-more" style="min-height: 2rem">Xem thêm</button>
-            </div>
-          </div>
-          <div class="product-list grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-size-1 px-size-1 my-size-2 min-h-350" id="productList5"></div>
-        </div>
-
-        <div class="products-section min-h-460">
-          <div class="flex justify-between items-center my-size-2">
-            <h2 class="products-title text-size-3 font-bold mb-size-2 text-mine-shaft px-size-1">Xe Đạp Nữ</h2>
-            <div class="flex gap-size-1">
-              <button class="view-more" style="min-height: 2rem">Xem thêm</button>
-            </div>
-          </div>
-          <div class="product-list grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-size-1 px-size-1 my-size-2 min-h-350" id="productList6"></div>
-        </div>
-
+        <!-- 
         <div class="promo-banners flex flex-col justify-between">
           <img class="w-full rounded-size-1" src="./img/slider/slider10.jpg" alt="Promo Banner" />
-        </div>
-
-        <div class="products-section min-h-460">
-          <div class="flex justify-between items-center my-size-2">
-            <h2 class="products-title text-size-3 font-bold mb-size-2 text-mine-shaft px-size-1">Xe Đạp Điện</h2>
-            <div class="flex gap-size-1">
-              <button class="view-more" style="min-height: 2rem">Xem thêm</button>
-            </div>
-          </div>
-          <div class="product-list grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-size-1 px-size-1 my-size-2 min-h-350" id="productList7"></div>
-        </div>
-
-        <div class="products-section min-h-460">
-          <div class="flex justify-between items-center my-size-2">
-            <h2 class="products-title text-size-3 font-bold mb-size-2 text-mine-shaft px-size-1">Xe Đạp Khác</h2>
-            <div class="flex gap-size-1">
-              <button class="view-more" style="min-height: 2rem">Xem thêm</button>
-            </div>
-          </div>
-          <div class="product-list grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-size-1 px-size-1 my-size-2 min-h-350" id="productList8"></div>
-        </div>
+        </div> -->
 
         <!-- Brand -->
         <!-- <div class="category-section">

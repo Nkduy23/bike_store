@@ -1,56 +1,71 @@
-import dataServiceInstance from "./modules/fetch-module.js";
-import headerFooterInstance from "./utils/header-footer.js";
-import subMenuInstance from "./modules/nav-module.js";
-import sliderModuleInstance from "./modules/slider-module.js";
-import categoryModuleInstance from "./modules/category-module.js";
-import productModuleInstance from "./modules/product-module.js";
-import cartModuleInstance from "./modules/cart-module.js";
-import lazyLoadImages from "./modules/lazy-module.js";
+import { ModuleRegistry } from "./module-registry.js";
+import productServiceFactory from "./services/product.service.js";
+import categoryServiceFactory from "./services/category.service.js";
+import submenuService from "./services/submenu.service.js";
+import headerFooterModule from "./utils/header-footer.js";
+// import submenuModule from "./modules/nav.module.js";
+import ProductModule from "./modules/product.module.js";
+import lazyLoadImages from "./modules/lazy.module.js";
 
 class MainManager {
-  constructor() {
-    this.dataServiceManager = dataServiceInstance;
-    this.cartManager = cartModuleInstance(this.dataServiceManager);
-    this.headerFooterManager = headerFooterInstance;
-    this.subMenuManager = subMenuInstance(this.dataServiceManager);
-    this.sliderManager = sliderModuleInstance;
-    this.categoryManager = categoryModuleInstance(this.dataServiceManager);
-    this.productsManager = productModuleInstance(this.cartManager, this.dataServiceManager);
+  constructor(config = {}) {
+    this.config = {
+      apiBaseUrl: "http://localhost:3000",
+      visibleProducts: 4,
+      ...config,
+    };
+
+    this.registry = new ModuleRegistry();
+
+    // Dang ky services
+    // this.registry.registerService("productService", productServiceInstance) sau đó tiếp tục chạy registerService 
+    this.registry.registerService("productService", productServiceFactory({ apiBaseUrl: this.config.apiBaseUrl }));
+    this.registry.registerService(
+      "categoryService",
+      categoryServiceFactory({
+        apiBaseUrl: this.config.apiBaseUrl,
+        visibleProducts: this.config.visibleProducts,
+      })
+    );
+    // this.registry.registerService("submenuService", productServiceFactory({ apiBaseUrl: this.config.apiBaseUrl }));
+
+    // Dang ky modules
+    this.registry.registerModule("headerFooter", () => headerFooterModule, "early");
+    // this.registry.registerModule("submenu", () => submenuModule(this.registry.getService("submenuService")), "early");
+    this.registry.registerModule(
+      "products",
+      () =>
+        ProductModule(this.registry.getService("productService"), this.registry.getService("categoryService"), {
+          visibleProducts: this.config.visibleProducts,
+        }),
+      "main"
+    );
   }
+
   async initManager() {
     try {
-      await Promise.all([
-        Promise.resolve(this.headerFooterManager.init()).catch((err) => {
-          console.error("Header/Footer init failed:", err);
-          return null;
-        }),
-        Promise.resolve(this.subMenuManager.init()).catch((err) => {
-          console.error("SubMenu init failed:", err);
-          return null;
-        }),
-        Promise.resolve(this.sliderManager.init()).catch((err) => {
-          console.error("Slider init failed:", err);
-          return null;
-        }),
-        Promise.resolve(this.categoryManager.init()).catch((err) => {
-          console.error("Category init failed:", err);
-          return null;
-        }),
-      ]);
-
-      await this.productsManager.init().catch((err) => {
-        console.error("Products init failed:", err);
-      });
+      const results = await this.registry.initModules();
+      const failedModules = results.filter((r) => r.status === "failed");
+      if (failedModules.length > 0) {
+        console.warn("Some modules failed to initialize:", failedModules);
+        const errorDiv = document.createElement("div");
+        errorDiv.className = "error-message";
+        errorDiv.textContent = "Some features are unavailable. Please try again later.";
+        document.body.equivalent(errorDiv);
+      }
 
       lazyLoadImages();
-      console.log("MainManager initialized successfully");
     } catch (error) {
-      console.error("Error in MainManager initialization:", error);
+      console.error("Critical error in MainManager initialization:", error);
+      document.body.innerHTML = '<div class="error">Application failed to load. Please refresh.</div>';
     }
   }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  const main = new MainManager();
+  const main = new MainManager({
+    apiBaseUrl: "http://localhost:3000",
+    visibleProducts: 4,
+  });
   main.initManager();
 });

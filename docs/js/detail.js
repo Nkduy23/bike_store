@@ -1,7 +1,7 @@
-import DataServiceInstance from "./modules/fetch-module.js";
+import DataServiceInstance from "./modules/fetch.module.js";
 import headerFooterInstance from "./utils/header-footer.js";
-import detailModuleInstance from "./modules/detail-module.js";
-import cartModuleInstance from "./modules/cart-module.js";
+import detailModuleInstance from "./modules/detail.module.js";
+import cartModuleInstance from "./modules/cart.module.js";
 
 class DetailManager {
   constructor() {
