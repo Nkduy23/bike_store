@@ -2,6 +2,7 @@ import jsonServer from "json-server";
 
 const server = jsonServer.create();
 const router = jsonServer.router("./src/data/db.json");
+// middlewares thêm các tính năng mặc định như: logger, static files, v.v.
 const middlewares = jsonServer.defaults();
 
 server.use(middlewares);

@@ -11336,12 +11336,15 @@ header span {
 .product-detail {
   background: white;
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   overflow: hidden;
 }
 .product-detail .product-header {
-  padding: 30px;
+  padding: 2rem;
   border-bottom: 1px solid #eee;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 .product-detail .product-title {
   font-size: 2.5rem;
@@ -11355,7 +11358,6 @@ header span {
   align-items: center;
   justify-content: center;
   gap: 10px;
-  margin-bottom: 20px;
 }
 .product-detail .stars {
   display: flex;
@@ -11383,7 +11385,6 @@ header span {
   margin-bottom: 20px;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 .product-detail .product-image {
   width: 100%;
@@ -11414,7 +11415,7 @@ header span {
 }
 .product-detail .thumbnail-gallery img:hover,
 .product-detail .product-video:hover {
-  border-color: #3498db;
+  border-color: #e9af10;
   transform: translateY(-2px);
 }
 .product-detail .thumbnail-gallery img.active {
@@ -11430,7 +11431,7 @@ header span {
 .product-detail .price-section {
   margin-bottom: 25px;
   padding: 20px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-color: #2e77ba;
   border-radius: 12px;
   color: white;
   text-align: center;
@@ -11559,10 +11560,6 @@ header span {
   cursor: pointer;
   transition: all 0.3s ease;
   flex: 1;
-}
-.product-detail .btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
 }
 .product-detail .btn-secondary {
   background: white;
@@ -11819,6 +11816,7 @@ header span {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 2rem;
   margin-top: 20px;
   padding: 15px;
   background-color: #f9f9f9;
@@ -11879,7 +11877,8 @@ header span {
   background-color: #2980b9;
 }
 
-.product-list .product-labelSale {
+.product-list .product-labelSale,
+.related-grid .product-labelSale {
   position: absolute;
   top: 0;
   right: 0;
@@ -11894,40 +11893,49 @@ header span {
   clip-path: polygon(100% 0, 100% 100%, 50% 70%, 0% 100%, 0 43%, 0% 0%);
   box-shadow: 0 2px 8px rgba(255, 71, 87, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
-.product-list .product-item {
+.product-list .product-item,
+.related-grid .product-item {
   min-height: 32rem;
   border: 1px solid #ddd;
   border-radius: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
 }
-.product-list .product-item:hover {
+.product-list .product-item:hover,
+.related-grid .product-item:hover {
   transform: translateY(-5px);
 }
-.product-list .product-item .product-name {
+.product-list .product-item .product-name,
+.related-grid .product-item .product-name {
   font-size: 1.6rem;
   margin: 10px 0;
   color: #333;
 }
 .product-list .product-item .product-priceSale,
-.product-list .product-item .product-priceOriginal {
+.product-list .product-item .product-priceOriginal,
+.related-grid .product-item .product-priceSale,
+.related-grid .product-item .product-priceOriginal {
   font-size: 1.6rem;
   color: #e74c3c;
   font-weight: bold;
 }
-.product-list .product-item .product-priceOld {
+.product-list .product-item .product-priceOld,
+.related-grid .product-item .product-priceOld {
   font-size: 1.2rem;
   color: #a7a5a5;
   text-decoration: line-through;
 }
-.product-list .product-item .color-selection {
+.product-list .product-item .color-selection,
+.related-grid .product-item .color-selection {
   margin: 0.5rem 0;
 }
-.product-list .product-item .color-selection .color-options {
+.product-list .product-item .color-selection .color-options,
+.related-grid .product-item .color-selection .color-options {
   display: flex;
   gap: 8px;
 }
-.product-list .product-item .color-selection .color-option {
+.product-list .product-item .color-selection .color-option,
+.related-grid .product-item .color-selection .color-option {
   width: 25px;
   height: 25px;
   border-radius: 50%;
@@ -11935,7 +11943,8 @@ header span {
   cursor: pointer;
   transition: border-color 0.3s;
 }
-.product-list .product-item .color-selection .color-option.active {
+.product-list .product-item .color-selection .color-option.active,
+.related-grid .product-item .color-selection .color-option.active {
   border-color: #e00b2b;
 }
 
@@ -12176,16 +12185,6 @@ body {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-}
-
-.btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-}
-
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
 }
 
 .btn-secondary {

@@ -1,7 +1,8 @@
 class ProductModule {
-  constructor(productService, categoryService, config = {}) {
+  constructor(productService, categoryService, cartService, config = {}) {
     this.productService = productService;
     this.categoryService = categoryService;
+    this.cartService = cartService;
     this.categoryList = [];
     this.products = [];
     this.visibleProducts = config.visibleProducts || 4;
@@ -20,6 +21,7 @@ class ProductModule {
 
   renderAllProductLists() {
     const template = document.getElementById("productTemplate");
+    const colorTemplate = document.getElementById("colorOptionTemplate");
     if (!template) {
       console.error('Template with id "productTemplate" not found');
       return;
@@ -61,8 +63,20 @@ class ProductModule {
           labelSale.style.display = "none";
         }
 
-        colorOptions.dataset.productId = product.id;
-        colorOptions.innerHTML = product.colors.map((color) => `<div class="color-option" data-color="${color}" style="background: ${color};"></div>`).join("");
+        const colorFragment = document.createDocumentFragment();
+        product.colors.forEach((color, index) => {
+          const clone = colorTemplate.content.cloneNode(true);
+          const option = clone.querySelector(".color-option");
+          option.dataset.color = color;
+          option.dataset.image = product.colorImages ? product.colorImages[color] : product.thumbnails[index] || product.image;
+          option.style.backgroundColor = color.toLowerCase();
+          if (index === 0) option.classList.add("active");
+          colorFragment.appendChild(clone);
+        });
+        productItem.dataset.defaultColor = product.colors[0];
+        colorOptions.innerHTML = "";
+        colorOptions.appendChild(colorFragment);
+
         addToCart.dataset.productId = product.id;
 
         fragment.appendChild(productNode);
@@ -77,49 +91,83 @@ class ProductModule {
     const pageDetail = document.querySelectorAll(".product-item");
     pageDetail.forEach((item) => {
       item.addEventListener("click", (e) => {
-        if (!e.target.classList.contains("add-to-cart")) {
+        if (!e.target.classList.contains("add-to-cart") && !e.target.classList.contains("color-option")) {
           const productId = item.getAttribute("data-product-id");
           window.location.href = `detail.html?id=${productId}`;
         }
       });
     });
 
-    const pageCart = document.querySelectorAll(".add-to-cart");
-    pageCart.forEach((button) => {
-      button.addEventListener("click", async (e) => {
-        e.stopPropagation();
-        const productId = button.getAttribute("data-product-id");
-        const product = this.products.find((p) => p.id == productId);
-        const colorOptions = button.parentElement.querySelectorAll(".color-option");
-        const selectedColor = Array.from(colorOptions)
-          .find((option) => option.classList.contains("active"))
-          ?.getAttribute("data-color");
-        try {
-          if (!selectedColor && product.colors && product.colors.length > 0) {
-            alert("Vui lòng chọn màu sắc trước khi thêm vào giỏ hàng!");
-            return;
-          }
-          await this.cartManager.addToCart(product, 1, selectedColor, false);
-          window.location.href = "cart.html";
-        } catch (error) {
-          console.error("Error adding to cart:", error);
-          alert("Có lỗi khi thêm vào giỏ hàng. Vui lòng thử lại!");
+    const colorOptions = document.querySelectorAll(".color-option");
+
+    colorOptions.forEach((option) => {
+      option.addEventListener("mouseover", () => {
+        const productItem = option.closest(".product-item");
+        const img = productItem.querySelector("img");
+
+        img.src = option.dataset.image;
+
+        const currentActiveColor = productItem.querySelector(".color-option.active");
+        if (currentActiveColor) currentActiveColor.classList.remove("active");
+        option.classList.add("active");
+      });
+
+      option.addEventListener("mouseout", () => {
+        const productItem = option.closest(".product-item");
+        const img = productItem.querySelector("img");
+
+        const defaultColor = productItem.dataset.defaultColor;
+        const defaultOption = Array.from(productItem.querySelectorAll(".color-option")).find((opt) => opt.dataset.color === defaultColor);
+
+        if (defaultOption) {
+          img.src = defaultOption.dataset.image;
+          defaultOption.classList.add("active");
         }
+
+        // Bỏ active của màu vừa hover
+        if (option.dataset.color !== defaultColor) {
+          option.classList.remove("active");
+        }
+      });
+
+      option.addEventListener("click", () => {
+        const productItem = option.closest(".product-item");
+        const colors = productItem.querySelectorAll(".color-option");
+        // Cập nhật class active
+        colors.forEach((c) => c.classList.remove("active"));
+        option.classList.add("active");
+        productItem.dataset.defaultColor = option.dataset.color;
       });
     });
 
-    const colorOptions = document.querySelectorAll(".color-option");
-    colorOptions.forEach((option) => {
-      option.addEventListener("click", (e) => {
-        e.stopPropagation();
-        const siblings = option.parentElement.querySelectorAll(".color-option");
-        siblings.forEach((o) => o.classList.remove("active"));
-        option.classList.add("active");
+    const addToCartButtons = document.querySelectorAll(".add-to-cart");
+    addToCartButtons.forEach((button) => {
+      button.addEventListener("click", async () => {
+        const productId = button.dataset.productId;
+        const product = this.products.find((p) => p.id === productId);
+        const productItem = button.closest(".product-item");
+        const selectedColor = productItem.querySelector(".color-option.active")?.dataset.color || null;
+        const selectedImage = productItem.querySelector(".color-option.active")?.dataset.image || product.image;
+
+        try {
+          await this.cartService.addItem(
+            {
+              ...product,
+              image: selectedImage,
+              selectedColor,
+            },
+            1,
+            selectedColor
+          );
+          alert("Đã thêm vào giỏ hàng!");
+        } catch (error) {
+          alert("Có lỗi khi thêm vào giỏ hàng!");
+        }
       });
     });
   }
 }
 
-export default function productModule(productService, categoryService) {
-  return new ProductModule(productService, categoryService);
+export default function productModule(productService, categoryService, cartService) {
+  return new ProductModule(productService, categoryService, cartService);
 }

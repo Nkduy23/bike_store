@@ -6,7 +6,7 @@ class ProductService extends BaseService {
   }
 
   async getHomeProducts() {
-    return this.get(`_fields=id,name,image,priceSale,discount,priceOriginal,colors,category`);
+    return this.get(`_fields=id,name,image,priceSale,discount,priceOriginal,colors,colorImages,category`);
   }
 
   async getProductId(id) {
@@ -19,6 +19,7 @@ class ProductService extends BaseService {
 }
 // Tên createProductService là do bạn đặt khi import, nhưng nó đại diện cho hàm (config) => new ProductService(config).
 // factory function:
+// Factory function export default (config) => new ProductService(config) cho phép tạo instance động, thay vì singleton cố định, hỗ trợ cấu hình khác nhau.
 export default (config) => new ProductService(config);
 
 // Trong product.service.js, export default (config) => new ProductService(config) định nghĩa một hàm để tạo instance của ProductService.

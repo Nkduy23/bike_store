@@ -17,8 +17,6 @@ const paths = {
   dist: "docs",
 };
 
-// .pipe(...)	Gulp hoạt động theo cơ chế streaming (dòng chảy), nên anh dùng .pipe() để truyền kết quả từ bước này sang bước khác
-
 // Xoá thư mục public
 export function clean() {
   return deleteAsync([
@@ -70,8 +68,8 @@ export function watchFiles() {
   watch(paths.scss, buildScssDev);
 }
 
-// Task mặc định là DEV
+// Task cho DEV
 export default series(copyHtml, copyJs, buildScssDev, watchFiles);
 
 // Task cho PROD
-export const build = series(clean, copyHtml, copyJs, buildScssProd, watchFiles);
+export const build = series(clean, copyHtml, copyJs, buildScssProd);

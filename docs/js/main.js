@@ -1,10 +1,17 @@
-import { ModuleRegistry } from "./module-registry.js";
-import productServiceFactory from "./services/product.service.js";
-import categoryServiceFactory from "./services/category.service.js";
-import submenuService from "./services/submenu.service.js";
+import ModuleRegistry from "./module-registry.js";
 import headerFooterModule from "./utils/header-footer.js";
-// import submenuModule from "./modules/nav.module.js";
-import ProductModule from "./modules/product.module.js";
+import submenuServiceFactory from "./services/nav.service.js";
+import submenuModule from "./modules/nav.module.js";
+import sliderServiceFactory from "./services/slider.service.js";
+import sliderModule from "./modules/slider.module.js";
+import promoServiceFactory from "./services/promo.service.js";
+import promoModule from "./modules/promo.module.js";
+import categoryServiceHomeFactory from "./services/category.service.js";
+import categoryModule from "./modules/category.module.js";
+import productServiceFactory from "./services/product.service.js";
+import productModule from "./modules/product.module.js";
+import categoriesSectionServiceFactory from "./services/category.service.js";
+import cartServiceFactory from "./services/cart.service.js";
 import lazyLoadImages from "./modules/lazy.module.js";
 
 class MainManager {
@@ -17,25 +24,31 @@ class MainManager {
 
     this.registry = new ModuleRegistry();
 
-    // Dang ky services
-    // this.registry.registerService("productService", productServiceInstance) sau đó tiếp tục chạy registerService 
+    // Service
+    this.registry.registerService("submenuService", submenuServiceFactory({ apiBaseUrl: this.config.apiBaseUrl }));
+    this.registry.registerService("sliderService", sliderServiceFactory({ apiBaseUrl: this.config.apiBaseUrl }));
+    this.registry.registerService("promoService", promoServiceFactory({ apiBaseUrl: this.config.apiBaseUrl }));
+    this.registry.registerService("categoriesService", categoryServiceHomeFactory({ apiBaseUrl: this.config.apiBaseUrl }));
+    this.registry.registerService("cartService", cartServiceFactory({ apiBaseUrl: this.config.apiBaseUrl }));
     this.registry.registerService("productService", productServiceFactory({ apiBaseUrl: this.config.apiBaseUrl }));
     this.registry.registerService(
-      "categoryService",
-      categoryServiceFactory({
+      "categoriesSectionsService",
+      categoriesSectionServiceFactory({
         apiBaseUrl: this.config.apiBaseUrl,
         visibleProducts: this.config.visibleProducts,
       })
     );
-    // this.registry.registerService("submenuService", productServiceFactory({ apiBaseUrl: this.config.apiBaseUrl }));
 
-    // Dang ky modules
+    // Module
     this.registry.registerModule("headerFooter", () => headerFooterModule, "early");
-    // this.registry.registerModule("submenu", () => submenuModule(this.registry.getService("submenuService")), "early");
+    this.registry.registerModule("submenus", () => submenuModule(this.registry.getService("submenuService")), "early");
+    this.registry.registerModule("sliders", () => sliderModule(this.registry.getService("sliderService")), "early");
+    this.registry.registerModule("promos", () => promoModule(this.registry.getService("promoService")), "early");
+    this.registry.registerModule("category", () => categoryModule(this.registry.getService("categoriesService")), "main");
     this.registry.registerModule(
       "products",
       () =>
-        ProductModule(this.registry.getService("productService"), this.registry.getService("categoryService"), {
+        productModule(this.registry.getService("productService"), this.registry.getService("categoriesSectionsService"), this.registry.getService("cartService"), {
           visibleProducts: this.config.visibleProducts,
         }),
       "main"
@@ -47,7 +60,6 @@ class MainManager {
       const results = await this.registry.initModules();
       const failedModules = results.filter((r) => r.status === "failed");
       if (failedModules.length > 0) {
-        console.warn("Some modules failed to initialize:", failedModules);
         const errorDiv = document.createElement("div");
         errorDiv.className = "error-message";
         errorDiv.textContent = "Some features are unavailable. Please try again later.";

@@ -17,13 +17,7 @@
         <div class="product-header">
           <h1 class="product-title"></h1>
           <div class="product-rating">
-            <div class="stars">
-              <span class="star">★</span>
-              <span class="star">★</span>
-              <span class="star">★</span>
-              <span class="star">★</span>
-              <span class="star">★</span>
-            </div>
+            <div class="stars"></div>
             <span class="rating-text"></span>
           </div>
         </div>
@@ -33,20 +27,7 @@
             <div class="main-image-wrapper">
               <img class="product-image" src="" alt="" />
             </div>
-            <div class="thumbnail-gallery">
-              <img src="" alt="Hình 1" class="active" />
-              <img src="" alt="Hình 1" />
-              <img src="" alt="Hình 1" />
-              <img src="" alt="Hình 1" />
-              <img src="" alt="Hình 1" />
-              <img src="" alt="Hình 1" />
-              <img src="" alt="Hình 1" />
-              <img src="" alt="Hình 1" />
-              <!-- <video class="product-video" controls>
-                <source src="#" type="video/mp4" />
-                Video demo sản phẩm
-              </video> -->
-            </div>
+            <div class="thumbnail-gallery" id="thumbnailGallery"></div>
           </div>
 
           <div class="info-section">
@@ -61,19 +42,19 @@
             <div class="product-info-grid">
               <div class="info-item">
                 <div class="info-label">Thương hiệu</div>
-                <div class="info-value"></div>
+                <div class="info-value brand"></div>
               </div>
               <div class="info-item">
                 <div class="info-label">Kích thước</div>
-                <div class="info-value"></div>
+                <div class="info-value size"></div>
               </div>
               <div class="info-item">
                 <div class="info-label">Tình trạng kho</div>
-                <div class="info-value"></div>
+                <div class="info-value stock-status"></div>
               </div>
               <div class="info-item">
                 <div class="info-label">Danh mục</div>
-                <div class="info-value"></div>
+                <div class="info-value category"></div>
               </div>
             </div>
 
@@ -81,11 +62,7 @@
 
             <div class="color-options">
               <div class="option-title">Chọn màu sắc:</div>
-              <div class="color-grid">
-                <div class="color-option active"></div>
-                <div class="color-option"></div>
-                <div class="color-option"></div>
-              </div>
+              <div class="color-grid" id="colorGrid"></div>
             </div>
 
             <div class="quantity-section">
@@ -114,40 +91,7 @@
           <div class="tab-content active" id="tech-info">
             <h3>Thông tin kỹ thuật chi tiết</h3>
             <table class="tech-table">
-              <tbody>
-                <tr>
-                  <th>Chất liệu</th>
-                  <td></td>
-                </tr>
-                <tr>
-                  <th>Trọng lượng</th>
-                  <td></td>
-                </tr>
-                <tr>
-                  <th>Độ tuổi phù hợp</th>
-                  <td></td>
-                </tr>
-                <tr>
-                  <th>Kích thước bánh xe</th>
-                  <td></td>
-                </tr>
-                <tr>
-                  <th>Loại phanh</th>
-                  <td></td>
-                </tr>
-                <tr>
-                  <th>Màu sắc</th>
-                  <td></td>
-                </tr>
-                <tr>
-                  <th>Xuất xứ</th>
-                  <td></td>
-                </tr>
-                <tr>
-                  <th>Bảo hành</th>
-                  <td></td>
-                </tr>
-              </tbody>
+              <tbody id="techTable"></tbody>
             </table>
           </div>
 
@@ -169,27 +113,67 @@
                 <label class="form-label">Nội dung đánh giá</label>
                 <textarea class="form-textarea" placeholder="Chia sẻ trải nghiệm của bạn về sản phẩm..."></textarea>
               </div>
-              <button class="btn btn-primary">Gửi đánh giá</button>
+              <button class="btn btn-primary submit-review">Gửi đánh giá</button>
             </div>
 
-            <div class="comments-list"></div>
+            <div class="comments-list" id="commentsList"></div>
           </div>
 
           <div class="tab-content" id="shipping">
             <h3>Chính sách vận chuyển</h3>
-            <ul class="shipping-list" style="line-height: 2; margin: 20px 0"></ul>
+            <ul class="shipping-list" id="shippingList" style="line-height: 2; margin: 20px 0"></ul>
 
             <h3>Chính sách bảo hành</h3>
-            <ul class="warranty-list" style="line-height: 2; margin: 20px 0"></ul>
+            <ul class="warranty-list" id="warrantyList" style="line-height: 2; margin: 20px 0"></ul>
           </div>
         </div>
       </div>
     </div>
 
     <div class="related-products m-size-2 text-center">
-      <h3 class="related-title font-bold">Sản phẩm liên quan</h3>
-      <div class="related-grid grid grid-cols-4"></div>
+      <h3 class="related-title font-bold py-size-2">Sản phẩm liên quan</h3>
+      <div class="related-grid grid grid-cols-4 gap-size-1" id="relatedGrid"></div>
     </div>
+
+    <!-- Templates -->
+    <template id="thumbnailTemplate">
+      <img src="" alt="" class="thumbnail" />
+    </template>
+    <template id="colorOptionTemplate">
+      <div class="color-option"></div>
+    </template>
+    <template id="techInfoTemplate">
+      <tr>
+        <th class="tech-label"></th>
+        <td class="tech-value"></td>
+      </tr>
+    </template>
+    <template id="commentTemplate">
+      <div class="comment-item">
+        <div class="comment-header">
+          <span class="comment-user"></span>
+          <span class="comment-date"></span>
+          <div class="comment-rating"></div>
+        </div>
+        <p class="comment-content"></p>
+      </div>
+    </template>
+    <template id="policyTemplate">
+      <li class="policy-item"></li>
+    </template>
+    <template id="relatedProductTemplate">
+      <div class="product-item cursor-pointer relative">
+        <img class="product-image w-full" src="" alt="" />
+        <h4 class="product-name"></h4>
+
+        <div class="product-prices flex gap-size-1 justify-center min-h-size-15">
+          <div class="product-priceSale min-h-size-15"></div>
+          <div class="product-priceOld min-h-size-15"></div>
+        </div>
+        <div class="product-labelSale"></div>
+        <div class="product-price min-h-size-15"></div>
+      </div>
+    </template>
 
     <div data-include="./partials/footer.html"></div>
 

@@ -1,343 +1,327 @@
-class DetailModule {
-  constructor(cartManager, dataServiceManager) {
-    this.dataService = dataServiceManager;
+// src/modules/product-detail.module.js
+class ProductDetailModule {
+  constructor(productDetailService, cartService) {
+    this.productDetailService = productDetailService;
+    this.cartService = cartService;
+    this.productId = new URLSearchParams(window.location.search).get("id");
     this.product = null;
-    this.relatedProducts = [];
-    this.reviews = [];
-    this.ratings = null;
-    this.shippingPolicy = null;
-    this.warrantyPolicy = null;
-    this.selectedRating = 0;
-    this.inputQuantity = 1;
-    this.selectedColor = null;
-    this.cartManager = cartManager;
+    this.policies = null;
   }
 
   async init() {
+    if (!this.productId) {
+      console.error("Product ID not found in URL");
+      return;
+    }
     try {
-      const productId = new URLSearchParams(window.location.search).get("id");
-
-      if (!productId) {
-        throw new Error("Product ID not found in URL");
-      }
-
-      this.product = await this.dataService.fetchProducts(productId);
-
-      const [relatedProducts, reviews, ratings, shippingPolicy, warrantyPolicy] = await Promise.all([this.dataService.fetchRelatedProducts(this.product.category, this.product.id), this.dataService.fetchReviews(productId), this.dataService.fetchRatings(productId), this.dataService.fetchShippingPolicies(this.product.shippingPolicyId), this.dataService.fetchWarrantyPolicies(this.product.warrantyPolicyId)]);
-
-      this.relatedProducts = relatedProducts;
-      this.reviews = reviews;
-      this.ratings = ratings;
-      this.shippingPolicy = shippingPolicy;
-      this.warrantyPolicy = warrantyPolicy;
-
-      this.renderAll();
+      this.product = await this.productDetailService.getProductById(this.productId);
+      this.policies = await this.productDetailService.getPolicies();
+      await this.renderProduct();
+      await this.renderReviews();
+      await this.renderRelatedProducts();
       this.addEventListeners();
     } catch (error) {
-      console.error("Error initializing detail page:", error);
-      alert("Có lỗi khi tải trang chi tiết. Vui lòng thử lại!");
+      console.error("Error initializing product detail:", error);
     }
   }
 
-  renderAll() {
-    this.renderProductInfo();
-    this.imageGallery();
-    this.colorSelection();
-    this.quantityControls();
-    this.tabs();
-    this.technicalInfo();
-    this.comment();
-    this.ShippingAndWarranty();
-    this.RatingInput();
-    this.RelatedProducts();
-  }
+  async renderProduct() {
+    if (!this.product) return;
 
-  renderProductInfo() {
+    // Header
     document.querySelector(".product-title").textContent = this.product.name;
+    const stars = document.querySelector(".stars");
+    stars.innerHTML = this.renderStars(this.product.rating);
+    document.querySelector(".rating-text").textContent = `(${this.product.ratingCount} đánh giá)`;
 
-    if (this.product.priceSale) {
-      document.querySelector(".product-priceSale").textContent = this.product.priceSale.toLocaleString("vi-VN") + "₫";
-      document.querySelector(".product-priceOriginal").textContent = this.product.priceOriginal.toLocaleString("vi-VN") + "₫";
-    } else {
-      document.querySelector(".product-priceOriginal").textContent = this.product.priceOriginal.toLocaleString("vi-VN") + "₫";
-    }
+    // Image section
+    const mainImage = document.querySelector(".product-image");
+    mainImage.src = this.product.image;
+    mainImage.alt = this.product.name;
 
-    document.querySelector(".discount-badge").textContent = `-${this.product.discount}%`;
-    const infoValue = document.querySelectorAll(".product-info-grid .info-item .info-value");
-    infoValue[0].textContent = this.product.brand;
-    infoValue[1].textContent = this.product.size;
-    infoValue[2].textContent = this.product.stock > 0 ? `Còn ${this.product.stock} sản phẩm` : "Hết hàng";
-    infoValue[3].textContent = this.product.category;
+    const thumbnailGallery = document.querySelector("#thumbnailGallery");
+    const thumbnailTemplate = document.getElementById("thumbnailTemplate");
+    const thumbFragment = document.createDocumentFragment();
+    this.product.thumbnails.forEach((thumb, index) => {
+      const clone = thumbnailTemplate.content.cloneNode(true);
+      const img = clone.querySelector(".thumbnail");
+      img.src = thumb;
+      img.alt = `${this.product.name} thumbnail ${index + 1}`;
+      img.dataset.image = thumb;
+      if (index === 0) img.classList.add("active");
+      thumbFragment.appendChild(clone);
+    });
+    thumbnailGallery.innerHTML = "";
+    thumbnailGallery.appendChild(thumbFragment);
 
-    document.querySelector(".description").innerHTML = `<strong>Mô tả sản phẩm:</strong><br>${this.product.description}`;
+    // Info section
+    document.querySelector(".product-priceSale").textContent = this.product.priceSale ? `${this.product.priceSale.toLocaleString()}đ` : "";
+    document.querySelector(".product-priceOriginal").textContent = this.product.priceOriginal.toLocaleString() + "đ";
+    document.querySelector(".discount-badge").textContent = this.product.discount ? `-${this.product.discount}%` : "";
+    document.querySelector(".brand").textContent = this.product.brand;
+    document.querySelector(".size").textContent = this.product.size;
+    document.querySelector(".stock-status").textContent = this.product.stockStatus;
+    document.querySelector(".category").textContent = this.product.category;
+    document.querySelector(".description").innerHTML = this.product.description;
 
-    document.querySelector(".add-to-cart").setAttribute("data-id", this.product.id);
+    const colorGrid = document.querySelector("#colorGrid");
+    const colorTemplate = document.getElementById("colorOptionTemplate");
+    const colorFragment = document.createDocumentFragment();
+    this.product.colors.forEach((color, index) => {
+      const clone = colorTemplate.content.cloneNode(true);
+      const option = clone.querySelector(".color-option");
+      option.dataset.color = color;
+      option.dataset.image = this.product.colorImages ? this.product.colorImages[color] : this.product.thumbnails[index] || this.product.image;
+      option.style.backgroundColor = color.toLowerCase();
+      option.title = color;
+      if (index === 0) option.classList.add("active");
+      colorFragment.appendChild(clone);
+    });
+    colorGrid.innerHTML = "";
+    colorGrid.appendChild(colorFragment);
+
+    // Tech info
+    const techTable = document.querySelector("#techTable");
+    const techTemplate = document.getElementById("techInfoTemplate");
+    const techFragment = document.createDocumentFragment();
+    this.product.techInfo.forEach((info) => {
+      const clone = techTemplate.content.cloneNode(true);
+      clone.querySelector(".tech-label").textContent = info.label;
+      clone.querySelector(".tech-value").textContent = info.value;
+      techFragment.appendChild(clone);
+    });
+    techTable.innerHTML = "";
+    techTable.appendChild(techFragment);
+
+    // Shipping & warranty
+    const shippingList = document.querySelector("#shippingList");
+    const warrantyList = document.querySelector("#warrantyList");
+    const policyTemplate = document.getElementById("policyTemplate");
+    const shippingFragment = document.createDocumentFragment();
+    this.policies.shippingPolicies.forEach((policy) => {
+      const clone = policyTemplate.content.cloneNode(true);
+      clone.querySelector(".policy-item").textContent = policy;
+      shippingFragment.appendChild(clone);
+    });
+    shippingList.innerHTML = "";
+    shippingList.appendChild(shippingFragment);
+
+    const warrantyFragment = document.createDocumentFragment();
+    this.policies.warrantyPolicies.forEach((policy) => {
+      const clone = policyTemplate.content.cloneNode(true);
+      clone.querySelector(".policy-item").textContent = policy;
+      warrantyFragment.appendChild(clone);
+    });
+    warrantyList.innerHTML = "";
+    warrantyList.appendChild(warrantyFragment);
   }
 
-  imageGallery() {
-    document.querySelector(".product-image").src = this.product.image;
-    document.querySelector(".product-image").alt = this.product.name;
+  async renderReviews() {
+    const reviews = await this.productDetailService.getReviewsByProductId(this.productId);
+    const commentsList = document.querySelector("#commentsList");
+    const commentTemplate = document.getElementById("commentTemplate");
+    const commentFragment = document.createDocumentFragment();
+    reviews.forEach((review) => {
+      const clone = commentTemplate.content.cloneNode(true);
+      clone.querySelector(".comment-user").textContent = review.userName;
+      clone.querySelector(".comment-date").textContent = review.date;
+      clone.querySelector(".comment-rating").innerHTML = this.renderStars(review.rating);
+      clone.querySelector(".comment-content").textContent = review.comment;
+      commentFragment.appendChild(clone);
+    });
+    commentsList.innerHTML = "";
+    commentsList.appendChild(commentFragment);
+  }
 
-    const thumbnail = document.querySelectorAll(".thumbnail-gallery img");
-    thumbnail.forEach((thumb, index) => {
-      thumb.src = this.product.images[index];
-      thumb.alt = `Hình ${index + 1}`;
+  async renderRelatedProducts() {
+    const relatedProducts = await this.productDetailService.getRelatedProducts(this.productId);
+    const relatedGrid = document.querySelector("#relatedGrid");
+    const relatedTemplate = document.getElementById("relatedProductTemplate");
+    const relatedFragment = document.createDocumentFragment();
+    relatedProducts.forEach((product) => {
+      const clone = relatedTemplate.content.cloneNode(true);
+      const img = clone.querySelector(".product-image");
+      const priceSaleEl = clone.querySelector(".product-priceSale");
+      const priceOldEl = clone.querySelector(".product-priceOld");
+      const singlePriceEl = clone.querySelector(".product-price"); // fallback nếu chỉ cần 1 giá
+      const labelSale = clone.querySelector(".product-labelSale");
+      img.src = product.image;
+      img.alt = product.name;
+      clone.querySelector(".product-name").textContent = product.name;
+      if (product.priceSale && product.priceSale < product.priceOriginal) {
+        priceSaleEl.textContent = product.priceSale.toLocaleString() + "đ";
+        priceOldEl.textContent = product.priceOriginal.toLocaleString() + "đ";
+        priceOldEl.style.textDecoration = "line-through";
+        priceOldEl.style.opacity = "0.6";
+        singlePriceEl.textContent = ""; // không hiển thị single nếu đã có 2 giá
+      } else {
+        priceSaleEl.textContent = "";
+        priceOldEl.textContent = "";
+        singlePriceEl.textContent = product.priceOriginal.toLocaleString() + "đ";
+      }
+      if (labelSale) {
+        labelSale.textContent = product.discount + "%";
+      }
+      relatedFragment.appendChild(clone);
+    });
+    relatedGrid.innerHTML = "";
+    relatedGrid.appendChild(relatedFragment);
+  }
+
+  renderStars(rating) {
+    const fullStars = Math.floor(rating);
+    const halfStar = rating % 1 >= 0.5 ? 1 : 0;
+    let stars = "";
+    for (let i = 0; i < fullStars; i++) stars += '<span class="star filled">★</span>';
+    if (halfStar) stars += '<span class="star half">★</span>';
+    for (let i = fullStars + halfStar; i < 5; i++) stars += '<span class="star">★</span>';
+    return stars;
+  }
+
+  addEventListeners() {
+    // Thumbnail click
+    const thumbnails = document.querySelectorAll(".thumbnail");
+    thumbnails.forEach((thumb) => {
       thumb.addEventListener("click", () => {
-        thumbnail.forEach((t) => t.classList.remove("active"));
+        thumbnails.forEach((t) => t.classList.remove("active"));
         thumb.classList.add("active");
         document.querySelector(".product-image").src = thumb.src;
       });
     });
-  }
 
-  colorSelection() {
+    // Color selection
     const colorOptions = document.querySelectorAll(".color-option");
-    colorOptions.forEach((option, index) => {
-      option.style.background = this.product.colors[index];
-      option.setAttribute("data-color", this.product.colors[index]);
+    const productImage = document.querySelector(".product-image");
+
+    colorOptions.forEach((option) => {
+      option.addEventListener("mouseover", () => {
+        const imageSrc = option.dataset.image;
+        productImage.src = imageSrc;
+
+        // Highlight thumbnail tương ứng
+        thumbnails.forEach((t) => t.classList.remove("active"));
+        const matchedThumbnail = Array.from(thumbnails).find((t) => t.dataset.image === imageSrc);
+
+        if (matchedThumbnail) matchedThumbnail.classList.add("active");
+      });
+
+      option.addEventListener("mouseout", () => {
+        const activeColor = document.querySelector(".color-option.active");
+        const imageSrc = activeColor.dataset.image;
+        productImage.src = imageSrc;
+
+        // Active thumbnail tương ứng
+        thumbnails.forEach((t) => t.classList.remove("active"));
+        const matchingThumb = Array.from(thumbnails).find((t) => t.src.includes(imageSrc));
+        if (matchingThumb) matchingThumb.classList.add("active");
+      });
+
       option.addEventListener("click", () => {
         colorOptions.forEach((o) => o.classList.remove("active"));
         option.classList.add("active");
-        this.selectedColor = option.getAttribute("data-color");
       });
     });
-  }
 
-  quantityControls() {
-    const inputQuantity = document.querySelector(".quantity-input");
-    const btnIncrease = document.querySelector(".quantity-increase");
-    const btnDecrease = document.querySelector(".quantity-decrease");
+    // Quantity selector
+    const quantityInput = document.querySelector(".quantity-input");
+    document.querySelector(".quantity-decrease").addEventListener("click", () => {
+      let value = parseInt(quantityInput.value);
+      if (value > 1) quantityInput.value = value - 1;
+    });
+    document.querySelector(".quantity-increase").addEventListener("click", () => {
+      let value = parseInt(quantityInput.value);
+      if (value < 10) quantityInput.value = value + 1;
+    });
+    quantityInput.addEventListener("change", () => {
+      let value = parseInt(quantityInput.value);
+      if (value < 1) quantityInput.value = 1;
+      if (value > 10) quantityInput.value = 10;
+    });
 
-    btnDecrease.addEventListener("click", () => {
-      const currentValue = parseInt(inputQuantity.value);
-      if (currentValue > 1) {
-        inputQuantity.value = currentValue - 1;
-        this.inputQuantity = Number(inputQuantity.value);
+    // Tabs
+    const tabButtons = document.querySelectorAll(".tab-btn");
+    const tabContents = document.querySelectorAll(".tab-content");
+    tabButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        tabButtons.forEach((btn) => btn.classList.remove("active"));
+        tabContents.forEach((content) => content.classList.remove("active"));
+        button.classList.add("active");
+        document.getElementById(button.dataset.tab).classList.add("active");
+      });
+    });
+
+    // Add to cart
+    const addToCartBtn = document.querySelector(".add-to-cart");
+    addToCartBtn.addEventListener("click", async () => {
+      const quantity = parseInt(quantityInput.value);
+      const selectedColor = document.querySelector(".color-option.active")?.dataset.color || null;
+      try {
+        await this.cartService.addItem(this.product, quantity, selectedColor);
+        alert("Đã thêm vào giỏ hàng!");
+      } catch (error) {
+        alert("Có lỗi khi thêm vào giỏ hàng!");
       }
     });
 
-    btnIncrease.addEventListener("click", () => {
-      const currentValue = parseInt(inputQuantity.value);
-      const maxStock = parseInt(inputQuantity.max);
-      if (currentValue < maxStock) {
-        inputQuantity.value = currentValue + 1;
-        this.inputQuantity = Number(inputQuantity.value);
+    // Buy now
+    const buyNowBtn = document.querySelector(".buy-now");
+    buyNowBtn.addEventListener("click", async () => {
+      const quantity = parseInt(quantityInput.value);
+      const selectedColor = document.querySelector(".color-option.active")?.dataset.color || null;
+      const selectedImage = document.querySelector(".color-option.active")?.dataset.image || this.product.image;
+      try {
+        await this.cartService.addItem(
+          {
+            ...this.product,
+            image: selectedImage,
+            selectedColor,
+          },
+          quantity,
+          selectedColor
+        );
+        window.location.href = "cart.html";
+      } catch (error) {
+        alert("Có lỗi khi mua hàng!");
       }
     });
 
-    inputQuantity.addEventListener("change", () => {
-      const value = parseInt(inputQuantity.value);
-      const min = parseInt(inputQuantity.min);
-      const max = parseInt(inputQuantity.max);
-
-      if (value < min) inputQuantity.value = min;
-      if (value > max) inputQuantity.value = max;
-
-      this.inputQuantity = Number(inputQuantity.value);
-    });
-  }
-
-  tabs() {
-    const tabBtns = document.querySelectorAll(".tab-btn");
-    const tabContent = document.querySelectorAll(".tab-content");
-
-    tabBtns.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const tabId = btn.dataset.tab;
-
-        tabBtns.forEach((b) => b.classList.remove("active"));
-        tabContent.forEach((c) => c.classList.remove("active"));
-
-        btn.classList.add("active");
-        document.getElementById(tabId)?.classList.add("active");
-      });
-    });
-  }
-
-  technicalInfo() {
-    const infoValues = document.querySelectorAll(".tech-table tbody tr td");
-
-    infoValues[0].textContent = this.product.technicalInfo.material;
-    infoValues[1].textContent = this.product.technicalInfo.weight;
-    infoValues[2].textContent = this.product.technicalInfo.ageRange;
-    infoValues[3].textContent = this.product.technicalInfo.wheelSize;
-    infoValues[4].textContent = this.product.technicalInfo.brakeType;
-    infoValues[5].textContent = this.product.technicalInfo.colors.join(", ");
-    infoValues[6].textContent = this.product.technicalInfo.origin;
-    infoValues[7].textContent = this.product.technicalInfo.warranty;
-  }
-
-  comment() {
-    const commentsList = document.querySelector(".comments-list");
-    const comments = this.reviews;
-
-    comments.forEach((review) => {
-      const commentItem = document.createElement("div");
-      commentItem.classList.add("comment-item");
-
-      const header = document.createElement("div");
-      header.classList.add("comment-header");
-
-      const author = document.createElement("span");
-      author.classList.add("comment-author");
-      author.textContent = review.author;
-
-      const date = document.createElement("span");
-      date.classList.add("comment-date");
-      date.textContent = review.date;
-
-      header.appendChild(author);
-      header.appendChild(date);
-
-      const rating = document.createElement("div");
-      rating.classList.add("comment-rating");
-
-      for (let i = 0; i < 5; i++) {
-        const star = document.createElement("span");
-        star.classList.add("star");
-        star.textContent = i < review.rating ? "★" : "☆";
-        rating.appendChild(star);
+    // Submit review
+    const submitReviewBtn = document.querySelector(".submit-review");
+    submitReviewBtn.addEventListener("click", async () => {
+      const rating = document.querySelector(".rating-star.active")?.dataset.rating || 0;
+      const userName = document.querySelector(".form-input").value;
+      const comment = document.querySelector(".form-textarea").value;
+      if (!rating || !userName || !comment) {
+        alert("Vui lòng nhập đầy đủ thông tin!");
+        return;
       }
-
-      const commentText = document.createElement("div");
-      commentText.classList.add("comment-text");
-      commentText.textContent = review.comment;
-
-      commentItem.appendChild(header);
-      commentItem.appendChild(rating);
-      commentItem.appendChild(commentText);
-
-      commentsList.appendChild(commentItem);
+      try {
+        await this.productDetailService.addReview(this.productId, {
+          userName,
+          rating: parseInt(rating),
+          comment,
+          date: new Date().toISOString().split("T")[0],
+        });
+        await this.renderReviews();
+        alert("Đánh giá đã được gửi!");
+      } catch (error) {
+        alert("Có lỗi khi gửi đánh giá!");
+      }
     });
-  }
 
-  ShippingAndWarranty() {
-    const shippingList = document.querySelector(".shipping-list");
-    const warrantyList = document.querySelector(".warranty-list");
-
-    if (this.shippingPolicy && this.shippingPolicy.details) {
-      this.shippingPolicy.details.forEach((item) => {
-        const listItem = document.createElement("li");
-        listItem.textContent = item;
-        shippingList.appendChild(listItem);
-      });
-    } else {
-      const listItem = document.createElement("li");
-      listItem.textContent = "Không có thông tin vận chuyển.";
-      shippingList.appendChild(listItem);
-    }
-
-    if (this.warrantyPolicy && this.warrantyPolicy.details) {
-      this.warrantyPolicy.details.forEach((item) => {
-        const listItem = document.createElement("li");
-        listItem.textContent = item;
-        warrantyList.appendChild(listItem);
-      });
-    } else {
-      const listItem = document.createElement("li");
-      listItem.textContent = "Không có thông tin bảo hành.";
-      warrantyList.appendChild(listItem);
-    }
-  }
-
-  RatingInput() {
+    // Rating stars
     const ratingStars = document.querySelectorAll(".rating-star");
-    let selectedRating = 0;
-
     ratingStars.forEach((star) => {
-      star.addEventListener("mouseover", () => {
-        const rating = parseInt(star.dataset.rating);
-        this.highlightStars(rating);
-      });
-
-      star.addEventListener("mouseout", () => {
-        this.highlightStars(selectedRating);
-      });
-
       star.addEventListener("click", () => {
-        selectedRating = parseInt(star.dataset.rating);
-        this.highlightStars(selectedRating);
-      });
-    });
-  }
-
-  highlightStars(rating) {
-    const ratingStars = document.querySelectorAll(".rating-star");
-    console.log(ratingStars);
-
-    ratingStars.forEach((star, index) => {
-      if (index < rating) {
-        star.classList.add("active");
-      } else {
-        star.classList.remove("active");
-      }
-    });
-  }
-
-  RelatedProducts() {
-    const relatedGrid = document.querySelector(".related-grid");
-
-    this.relatedProducts.forEach((product) => {
-      const relatedItem = document.createElement("div");
-      relatedItem.classList.add("related-item");
-      relatedItem.dataset.productId = product.id;
-
-      const relatedImage = document.createElement("img");
-      relatedImage.classList.add("related-image");
-      relatedImage.src = product.image;
-      relatedImage.alt = product.name;
-
-      const relatedInfo = document.createElement("div");
-      relatedInfo.classList.add("related-info");
-
-      const relatedName = document.createElement("div");
-      relatedName.classList.add("related-name");
-      relatedName.textContent = product.name;
-
-      const relatedPrice = document.createElement("div");
-      relatedPrice.classList.add("related-price");
-
-      if (product.priceSale) {
-        relatedPrice.innerHTML = `
-    <span class="price-sale">${product.priceSale.toLocaleString()}₫</span>
-    <span class="price-original">${product.priceOriginal.toLocaleString()}₫</span>
-  `;
-      } else {
-        relatedPrice.textContent = `${product.priceOriginal.toLocaleString()}₫`;
-      }
-
-      relatedInfo.appendChild(relatedName);
-      relatedInfo.appendChild(relatedPrice);
-
-      relatedItem.appendChild(relatedImage);
-      relatedItem.appendChild(relatedInfo);
-
-      relatedGrid.appendChild(relatedItem);
-    });
-  }
-
-  addEventListeners() {
-    const pageCart = document.querySelector(".add-to-cart");
-    if (pageCart) {
-      pageCart.addEventListener("click", async (e) => {
-        e.stopPropagation();
-        const product = this.product;
-        try {
-          if (!this.selectedColor && product.colors && product.colors.length > 0) {
-            alert("Vui lòng chọn màu sắc trước khi thêm vào giỏ hàng!");
-            return;
-          }
-          await this.cartManager.addToCart(product, this.inputQuantity, this.selectedColor, true); // isFromDetail = true
-          window.location.href = "cart.html";
-        } catch (error) {
-          console.error("Error adding to cart:", error);
-          alert("Có lỗi khi thêm vào giỏ hàng. Vui lòng thử lại!");
+        ratingStars.forEach((s) => s.classList.remove("active"));
+        for (let i = 1; i <= star.dataset.rating; i++) {
+          document.querySelector(`.rating-star[data-rating="${i}"]`).classList.add("active");
         }
       });
-    }
+    });
   }
 }
 
-export default function detailModuleInstance(cartManager, dataServiceManager) {
-  return new DetailModule(cartManager, dataServiceManager);
+export default function productDetailModule(productDetailService, cartService) {
+  return new ProductDetailModule(productDetailService, cartService);
 }

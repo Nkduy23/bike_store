@@ -3,13 +3,28 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Cart</title>
     <link rel="stylesheet" href="./css/main.css" />
   </head>
   <body class="text-base">
     <div data-include="./partials/header.html"></div>
 
-    <div class="container-main"><div class="cart-items" id="cartItems"></div></div>
+    <div class="container-main">
+      <div class="cart-items flex justify-center items-center flex-col" id="cartItems"></div>
+    </div>
+
+    <!-- Cart Template -->
+    <template id="cartTemplate">
+      <tr>
+        <td class="cart-stt"></td>
+        <td><img class="cart-image" src="" alt="" /></td>
+        <td class="cart-name"></td>
+        <td class="cart-color"></td>
+        <td><input type="number" class="quantity-input" min="1" value="1" /></td>
+        <td class="cart-price"></td>
+        <td><button class="remove-from-cart">Xóa</button></td>
+      </tr>
+    </template>
 
     <div data-include="./partials/footer.html"></div>
 

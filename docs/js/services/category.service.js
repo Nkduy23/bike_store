@@ -2,12 +2,12 @@ import BaseService from "./base.service.js";
 
 class CategoryService extends BaseService {
   constructor(config = {}) {
-    super("categorySections", config);
+    super("categories", config);
     this.visibleProducts = config.visibleProducts || 4;
   }
 
   async getCategorySections() {
-    const response = await this.request("");
+    const response = await this.request("Sections");
 
     if (!response) {
       throw new Error("Failed to fetch category sections");
@@ -20,8 +20,8 @@ class CategoryService extends BaseService {
     }));
   }
 
-  async getHomeCategory() {
-    return this.request("/homeCategory");
+  async getCategories() {
+    return this.request("");
   }
 }
 

@@ -65,35 +65,45 @@
             </ul>
           </nav>
 
-          <div class="main-sliders overflow-hidden relative w-full">
-            <button class="slider-prev border-none p-size-1 absolute cursor-pointer left-4 text-white text-size-3 z-10">&lt;</button>
-            <button class="slider-next border-none p-size-1 absolute cursor-pointer right-4 text-white text-size-3 z-10">&gt;</button>
-            <div class="slider-container w-full flex">
-              <!-- <img class="slider-image min-w-full rounded-size-1" style="max-width: 698px; max-height: 427px" src="./img/slider1.jpg" alt="Slider 1" /> -->
-              <img class="slider-image min-w-full rounded-size-1 cursor-pointer" src="./img/slider/slider2.jpg" alt="Slider 2" />
-              <img class="slider-image min-w-full rounded-size-1 cursor-pointer" src="./img/slider/slider3.jpg" alt="Slider 3" />
-              <img class="slider-image min-w-full rounded-size-1 cursor-pointer" src="./img/slider/slider4.jpg" alt="Slider 4" />
-              <img class="slider-image min-w-full rounded-size-1 cursor-pointer" src="./img/slider/slider5.jpg" alt="Slider 5" />
-              <img class="slider-image min-w-full rounded-size-1 cursor-pointer" src="./img/slider/slider6.jpg" alt="Slider 6" />
-              <img class="slider-image min-w-full rounded-size-1 cursor-pointer" src="./img/slider/slider7.jpg" alt="Slider 7" />
-            </div>
-          </div>
+          <!-- Slider Container -->
+          <div class="main-sliders overflow-hidden relative w-full" id="sliderContainer"></div>
 
-          <div class="promo-banners flex flex-col gap-size-1 w-full hidden md:flex">
-            <img class="w-full h-auto rounded-size-1 cursor-pointer" src="./img/promo/promo1.jpg" alt="Promo Banner" />
-            <img class="w-full h-auto rounded-size-1 cursor-pointer" src="./img/promo/promo2.jpg" alt="Promo Banner" />
-            <img class="w-full h-auto rounded-size-1 cursor-pointer" src="./img/promo/promo3.jpg" alt="Promo Banner" />
-          </div>
+          <!-- Slider Template -->
+          <template id="sliderTemplate">
+            <button class="slider-prev border-none p-size-1 absolute cursor-pointer left-4 text-white text-size-3 z-10"><</button>
+            <button class="slider-next border-none p-size-1 absolute cursor-pointer right-4 text-white text-size-3 z-10">></button>
+            <div class="slider-container w-full flex">
+              <!-- <img class="slider-image min-w-full rounded-size-1 cursor-pointer" src="" alt="" /> -->
+            </div>
+          </template>
+
+          <!-- Promo Container -->
+          <div class="promo-banners flex flex-col gap-size-1 w-full hidden md:flex" id="promoContainer"></div>
+
+          <!-- Promo Template -->
+          <template id="promoTemplate">
+            <img class="w-full h-auto rounded-size-1 cursor-pointer" src="" alt="" />
+          </template>
         </div>
 
-        <!-- Product Category -->
-        <div class="category-section">
+        <!-- Category Section -->
+        <section class="category-section">
           <div class="flex justify-between items-center my-size-2">
             <h2 class="category-title text-size-3 font-bold mb-size-2 text-mine-shaft px-size-1">DANH MỤC SẢN PHẨM</h2>
             <button class="view-more">Xem thêm</button>
           </div>
           <div class="category-list grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-size-1 px-size-1 my-size-2" id="categoryList"></div>
-        </div>
+        </section>
+
+        <!-- Category Template -->
+        <template id="categoryTemplate">
+          <div class="category-item">
+            <div class="category-box flex flex-col items-center gap-size-1 cursor-pointer p-size-1" style="aspect-ratio: 1 / 1; min-height: 8rem">
+              <img src="" alt="" style="width: 60%; aspect-ratio: 1 / 1; object-fit: contain" loading="lazy" />
+              <div class="category-name text-center text-size-1 font-medium" style="min-height: 2rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap"></div>
+            </div>
+          </div>
+        </template>
 
         <!-- Product List -->
         <div class="products-section min-h-460">
@@ -132,28 +142,10 @@
               <button class="add-to-cart">Mua ngay</button>
             </div>
           </template>
+          <template id="colorOptionTemplate">
+            <div class="color-option"></div>
+          </template>
         </div>
-
-        <!-- <div class="promo-banners flex flex-col justify-between">
-          <img class="w-full rounded-size-1" src="./img/slider/slider8.jpg" alt="Promo Banner" />
-        </div> -->
-
-        <!-- <div class="promo-banners flex flex-col justify-between">
-          <img class="w-full rounded-size-1" src="./img/slider/slider9.jpg" alt="Promo Banner" />
-        </div> -->
-
-        <!-- 
-        <div class="promo-banners flex flex-col justify-between">
-          <img class="w-full rounded-size-1" src="./img/slider/slider10.jpg" alt="Promo Banner" />
-        </div> -->
-
-        <!-- Brand -->
-        <!-- <div class="category-section">
-          <div class="flex justify-between items-center my-size-2">
-            <h2 class="category-title text-size-3 font-bold mb-size-2 text-mine-shaft px-size-1">THƯƠNG HIỆU</h2>
-          </div>
-          <div class="category-list grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-size-1 px-size-1 my-size-2" id="brandList"></div>
-        </div> -->
       </div>
     </div>
     <div data-include="./partials/footer.html" class="min-h-100"></div>

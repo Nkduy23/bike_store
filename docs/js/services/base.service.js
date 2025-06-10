@@ -4,8 +4,9 @@ export default class BaseService {
     this.resource = resource;
   }
 
-  async request(endpoint, method = "GET", data = null) {
-    const url = `${this.baseUrl}/${this.resource}${endpoint.startsWith("/") ? "" : "/"}${endpoint}`;
+  async request(endpoint, method = "GET", data = null, full = false) {
+    const url = full ? `${this.baseUrl}${endpoint}` : `${this.baseUrl}/${this.resource}${endpoint}`;
+
     const options = {
       method,
       headers: { "Content-Type": "application/json" },
