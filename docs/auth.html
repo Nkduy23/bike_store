@@ -5,10 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Đăng ký / Đăng nhập</title>
     <link rel="stylesheet" href="./css/main.css" />
+    <style>
+      .hidden {
+        display: none;
+      }
+      .error-message {
+        display: block;
+        color: red;
+        font-size: 0.8em;
+      }
+    </style>
   </head>
   <body>
-    <div data-include="./partials/header.html" class="min-h-100"></div>
-
     <div class="container-login">
       <main class="auth">
         <div class="auth__container">
@@ -17,14 +25,15 @@
             <div class="auth__group">
               <label for="email">Email</label>
               <input type="email" id="email" placeholder="example@gmail.com" required />
+              <span class="error-message"></span>
             </div>
             <div class="auth__group">
               <label for="password">Mật khẩu</label>
               <input type="password" id="password" placeholder="********" required />
+              <span class="error-message"></span>
             </div>
             <button type="submit" class="auth__button">Đăng nhập</button>
           </form>
-
           <p class="auth__switch">
             Chưa có tài khoản?
             <a href="#" id="switchToRegister">Đăng ký</a>
@@ -37,18 +46,20 @@
             <div class="auth__group">
               <label for="fullname">Họ và tên</label>
               <input type="text" id="fullname" placeholder="Nguyễn Văn A" required />
+              <span class="error-message"></span>
             </div>
             <div class="auth__group">
               <label for="emailReg">Email</label>
               <input type="email" id="emailReg" placeholder="example@gmail.com" required />
+              <span class="error-message"></span>
             </div>
             <div class="auth__group">
               <label for="passwordReg">Mật khẩu</label>
               <input type="password" id="passwordReg" placeholder="********" required />
+              <span class="error-message"></span>
             </div>
             <button type="submit" class="auth__button">Đăng ký</button>
           </form>
-
           <p class="auth__switch">
             Đã có tài khoản?
             <a href="#" id="switchToLogin">Đăng nhập</a>
@@ -57,8 +68,8 @@
       </main>
     </div>
 
-    <div data-include="./partials/footer.html" class="min-h-100"></div>
-
+    <script src="https://cdn.jsdelivr.net/npm/bcryptjs@2.4.3/dist/bcrypt.min.js"></script>
+    <script src="./js/inject-bcrypt.js"></script>
     <script type="module" src="./js/auth.js"></script>
   </body>
 </html>

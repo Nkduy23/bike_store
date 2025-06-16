@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chi tiết sản phẩm</title>
+    <link rel="stylesheet" href="styles.css" />
+    <!-- Thêm CSS tùy chỉnh -->
+  </head>
+  <body>
+    <div class="product-detail-container">
+      <h1 id="productTitle"></h1>
+      <div class="product-images">
+        <img id="mainImage" src="/placeholder.jpg" alt="Main Image" />
+        <div id="thumbnailGallery" class="thumbnail-gallery"></div>
+      </div>
+      <form id="productForm" class="product-form">
+        <div class="form-group">
+          <label for="name">Tên sản phẩm *</label>
+          <input type="text" id="name" name="name" required />
+        </div>
+        <div class="form-group">
+          <label for="rating">Đánh giá</label>
+          <input type="number" id="rating" name="rating" step="0.1" min="0" max="5" />
+        </div>
+        <div class="form-group">
+          <label for="ratingCount">Số lượt đánh giá</label>
+          <input type="number" id="ratingCount" name="ratingCount" />
+        </div>
+        <div class="form-group">
+          <label for="image">Hình ảnh chính</label>
+          <input type="text" id="image" name="image" />
+        </div>
+        <div class="form-group">
+          <label for="thumbnails">Hình ảnh phụ (mỗi URL một dòng)</label>
+          <textarea id="thumbnails" name="thumbnails"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="colorImages">Hình ảnh theo màu (JSON)</label>
+          <textarea id="colorImages" name="colorImages" placeholder='{"black": "url", "blue": "url"}'></textarea>
+        </div>
+        <div class="form-group">
+          <label for="video">Video</label>
+          <input type="text" id="video" name="video" />
+        </div>
+        <div class="form-group">
+          <label for="priceOriginal">Giá gốc *</label>
+          <input type="number" id="priceOriginal" name="priceOriginal" required />
+        </div>
+        <div class="form-group">
+          <label for="priceSale">Giá khuyến mãi</label>
+          <input type="number" id="priceSale" name="priceSale" />
+        </div>
+        <div class="form-group">
+          <label for="discount">Phần trăm giảm giá</label>
+          <input type="number" id="discount" name="discount" />
+        </div>
+        <div class="form-group">
+          <label for="description">Mô tả</label>
+          <textarea id="description" name="description"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="brand">Thương hiệu</label>
+          <input type="text" id="brand" name="brand" />
+        </div>
+        <div class="form-group">
+          <label for="colors">Màu sắc (mỗi màu một dòng)</label>
+          <textarea id="colors" name="colors"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="size">Kích thước</label>
+          <input type="text" id="size" name="size" />
+        </div>
+        <div class="form-group">
+          <label for="category">Danh mục</label>
+          <select id="category" name="category"></select>
+        </div>
+        <div class="form-group">
+          <label for="stockStatus">Tình trạng kho</label>
+          <select id="stockStatus" name="stockStatus">
+            <option value="Còn hàng">Còn hàng</option>
+            <option value="Hết hàng">Hết hàng</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="techInfo">Thông tin kỹ thuật (JSON)</label>
+          <textarea id="techInfo" name="techInfo" placeholder='[{"label": "Chất liệu", "value": "Hợp kim"}, ...]'></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-submit">Lưu</button>
+          <button type="button" class="btn btn-cancel" onclick="window.history.back()">Hủy</button>
+        </div>
+      </form>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", async () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const action = urlParams.get("action");
+        const id = urlParams.get("id");
+        const productData = urlParams.get("data") ? JSON.parse(urlParams.get("data")) : null;
+
+        const productForm = document.getElementById("productForm");
+        const productTitle = document.getElementById("productTitle");
+        const mainImage = document.getElementById("mainImage");
+        const thumbnailGallery = document.getElementById("thumbnailGallery");
+        const categorySelect = document.getElementById("category");
+
+        // Điền danh mục
+        const categories = JSON.parse(localStorage.getItem("categories")) || [];
+        categories.forEach((cat) => {
+          const option = document.createElement("option");
+          option.value = cat.name;
+          option.textContent = cat.name;
+          categorySelect.appendChild(option);
+        });
+
+        if (action === "edit" && productData) {
+          productTitle.textContent = `Sửa sản phẩm: ${productData.name}`;
+          mainImage.src = productData.image || "/placeholder.jpg";
+          productForm.dataset.id = id;
+          productForm.dataset.action = "edit";
+
+          // Hiển thị thumbnails
+          if (productData.thumbnails && productData.thumbnails.length) {
+            productData.thumbnails.forEach((thumb) => {
+              const img = document.createElement("img");
+              img.src = thumb;
+              img.alt = `${productData.name} thumbnail`;
+              img.classList.add("thumbnail");
+              thumbnailGallery.appendChild(img);
+            });
+          }
+
+          // Điền form
+          Object.keys(productData).forEach((key) => {
+            const input = productForm.querySelector(`#${key}`);
+            if (input) {
+              if (key === "thumbnails" || key === "colors") {
+                input.value = productData[key].join("\n");
+              } else if (key === "colorImages" || key === "techInfo") {
+                input.value = JSON.stringify(productData[key]);
+              } else {
+                input.value = productData[key] || "";
+              }
+            }
+          });
+        } else {
+          productTitle.textContent = "Thêm sản phẩm mới";
+          productForm.dataset.action = "create";
+        }
+
+        productForm.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const formData = new FormData(productForm);
+          let data = Object.fromEntries(formData);
+
+          data.priceOriginal = parseInt(data.priceOriginal);
+          data.priceSale = data.priceSale ? parseInt(data.priceSale) : null;
+          data.discount = data.discount ? parseInt(data.discount) : null;
+          data.rating = parseFloat(data.rating) || 0;
+          data.ratingCount = parseInt(data.ratingCount) || 0;
+          data.thumbnails = data.thumbnails ? data.thumbnails.split("\n").filter((t) => t.trim()) : [];
+          data.colorImages = data.colorImages ? JSON.parse(data.colorImages) : {};
+          data.techInfo = data.techInfo ? JSON.parse(data.techInfo) : [];
+          data.colors = data.colors ? data.colors.split("\n").filter((c) => c.trim()) : [];
+
+          try {
+            const adminService = window.adminModuleInstance.adminService; // Giả định adminModule đã khởi tạo
+            if (data.action === "create") {
+              await adminService.createProduct(data);
+            } else if (id) {
+              await adminService.updateProduct(id, data);
+            }
+            window.history.back();
+            alert("Thao tác thành công!");
+          } catch (err) {
+            console.error("Error saving data:", err);
+            alert("Có lỗi xảy ra! Kiểm tra định dạng JSON nếu có.");
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

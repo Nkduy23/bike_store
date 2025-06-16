@@ -80,4 +80,19 @@ document.addEventListener("DOMContentLoaded", () => {
     visibleProducts: 4,
   });
   main.initManager();
+
+  const observer = new MutationObserver(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    const userClass = document.querySelector(".userLocal");
+
+    if (user && userClass) {
+      userClass.innerHTML = `
+     <img src="./img/icon/user(2).png" alt="">
+     <span class="text-white">Xin chào, <strong>${user.fullname}</strong></span>
+    `;
+      observer.disconnect(); // chỉ chạy 1 lần
+    }
+  });
+
+  observer.observe(document.body, { childList: true, subtree: true });
 });

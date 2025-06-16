@@ -11,19 +11,20 @@ export default class BaseService {
       method,
       headers: { "Content-Type": "application/json" },
     };
-
     if (data) {
       options.body = JSON.stringify(data);
     }
 
     try {
       const response = await fetch(url, options);
+
       if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        const errorData = await response.json();
+        throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
       }
       return await response.json();
     } catch (error) {
-      console.error(`Error in ${method}${endpoint}:`, error);
+      console.error(`Error in ${method} ${url}:`, error);
       throw error;
     }
   }

@@ -1,13 +1,396 @@
 <!DOCTYPE html>
 <html lang="vi">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Trang Quản Trị</title>
-  <link rel="stylesheet" href="./css/main.css">
-</head>
-<body>
-  <div id="adminContent"></div>
-  <script type="module" src="./js/admin.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="./css/main.css" />
+  </head>
+  <body>
+    <div id="adminContent"></div>
+
+    <!-- Main Layout Template -->
+    <template id="adminLayoutTemplate">
+      <div class="admin-container">
+        <div class="sidebar">
+          <div class="sidebar-header">
+            <h2>🛠️ Admin Panel</h2>
+          </div>
+          <nav class="sidebar-nav">
+            <ul class="nav-menu">
+              <li class="nav-item" data-tab="dashboard">
+                <i class="icon">📊</i>
+                <span>Tổng quan</span>
+              </li>
+              <li class="nav-item" data-tab="categories">
+                <i class="icon">📂</i>
+                <span>Danh mục</span>
+                <span class="count" data-count="categories"></span>
+              </li>
+              <li class="nav-item" data-tab="products">
+                <i class="icon">📦</i>
+                <span>Sản phẩm</span>
+                <span class="count" data-count="products"></span>
+              </li>
+              <li class="nav-item" data-tab="users">
+                <i class="icon">👥</i>
+                <span>Người dùng</span>
+                <span class="count" data-count="users"></span>
+              </li>
+              <li class="nav-item" data-tab="reviews">
+                <i class="icon">⭐</i>
+                <span>Đánh giá</span>
+                <span class="count" data-count="reviews"></span>
+              </li>
+              <li class="nav-item" data-tab="policies">
+                <i class="icon">📜</i>
+                <span>Chính sách</span>
+                <span class="count" data-count="policies"></span>
+              </li>
+              <li class="nav-item">
+                <i class="icon">🏠</i>
+                <a href="./index.html" target="_blank" class="text-u-none text-white">Trang chủ</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+        <div class="main-content">
+          <div class="content-header">
+            <h1 id="pageTitle"></h1>
+            <div class="header-actions">
+              <button class="btn btn-primary add-new">+ Thêm mới</button>
+              <button class="btn btn-secondary export-data">📤 Xuất dữ liệu</button>
+            </div>
+          </div>
+          <div class="content-body" id="contentBody"></div>
+        </div>
+      </div>
+    </template>
+
+    <!-- Dashboard Template -->
+    <template id="dashboardTemplate">
+      <div class="dashboard-stats">
+        <div class="stat-card">
+          <div class="stat-icon">📦</div>
+          <div class="stat-info">
+            <h3 data-stat="products"></h3>
+            <p>Sản phẩm</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">👥</div>
+          <div class="stat-info">
+            <h3 data-stat="users"></h3>
+            <p>Người dùng</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">⭐</div>
+          <div class="stat-info">
+            <h3 data-stat="reviews"></h3>
+            <p>Đánh giá</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">💰</div>
+          <div class="stat-info">
+            <h3 data-stat="revenue"></h3>
+            <p>Tổng giá trị</p>
+          </div>
+        </div>
+      </div>
+      <div class="recent-activities">
+        <h3>Hoạt động gần đây</h3>
+        <div class="activity-list" id="activityList"></div>
+      </div>
+    </template>
+
+    <!-- Activity Item Template -->
+    <template id="activityItemTemplate">
+      <div class="activity-item">
+        <span class="activity-icon"></span>
+        <span class="activity-text"></span>
+        <span class="activity-time"></span>
+      </div>
+    </template>
+
+    <!-- Categories Template -->
+    <template id="categoriesTemplate">
+      <div class="data-table-container">
+        <div class="table-header">
+          <h3>Danh sách danh mục</h3>
+          <input type="text" placeholder="🔍 Tìm kiếm danh mục..." class="search-input" />
+        </div>
+        <div class="data-table">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Tên danh mục</th>
+                <th>Số sản phẩm</th>
+                <th>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody id="categoryList"></tbody>
+          </table>
+        </div>
+      </div>
+    </template>
+
+    <!-- Category Row Template -->
+    <template id="categoryRowTemplate">
+      <tr>
+        <td class="category-id"></td>
+        <td class="category-name"></td>
+        <td class="category-product-count"></td>
+        <td>
+          <button class="btn-action edit">✏️</button>
+          <button class="btn-action delete">🗑️</button>
+        </td>
+      </tr>
+    </template>
+
+    <template id="productsTemplate">
+      <div class="data-table-container">
+        <div class="table-header">
+          <h3>Danh sách sản phẩm</h3>
+          <input type="text" placeholder="🔍 Tìm kiếm sản phẩm..." class="search-input" />
+        </div>
+        <div class="data-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Ảnh</th>
+                <th>Tên sản phẩm</th>
+                <th>Giá</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody id="productList"></tbody>
+          </table>
+        </div>
+      </div>
+    </template>
+
+    <!-- Product Row Template -->
+    <template id="productRowTemplate">
+      <tr>
+        <td><img class="product-thumb" data-src="" alt="" /></td>
+        <td class="product-name"></td>
+        <td class="product-price"></td>
+        <td><span class="status-badge active">Hoạt động</span></td>
+        <td>
+          <button class="btn-action edit">✏️</button>
+          <button class="btn-action delete">🗑️</button>
+        </td>
+      </tr>
+    </template>
+
+    <!-- Product Form Template -->
+    <template id="productFormTemplate">
+      <div class="product-form-container">
+        <h2 class="form-title"></h2>
+        <form class="product-form">
+          <div class="form-group">
+            <label for="name">Tên sản phẩm *</label>
+            <input type="text" id="name" name="name" required />
+          </div>
+          <div class="form-group">
+            <label for="rating">Đánh giá <span style="color: #888">(Không thể chỉnh sửa)</span></label>
+            <input type="number" id="rating" name="rating" step="0.1" min="0" max="5" disabled />
+          </div>
+          <div class="form-group">
+            <label for="ratingCount">Số lượt đánh giá <span style="color: #888">(Không thể chỉnh sửa)</span></label>
+            <input type="number" id="ratingCount" name="ratingCount" disabled />
+          </div>
+          <div class="form-group">
+            <label for="priceOriginal">Giá gốc *</label>
+            <input type="number" id="priceOriginal" name="priceOriginal" required />
+          </div>
+          <div class="form-group">
+            <label for="priceSale">Giá khuyến mãi</label>
+            <input type="number" id="priceSale" name="priceSale" />
+          </div>
+          <div class="form-group">
+            <label for="discount">Phần trăm giảm giá</label>
+            <input type="number" id="discount" name="discount" />
+          </div>
+          <div class="form-group">
+            <label for="description">Mô tả</label>
+            <textarea id="description" name="description"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="brand">Thương hiệu</label>
+            <input type="text" id="brand" name="brand" />
+          </div>
+          <div class="form-group">
+            <label for="colors">Màu sắc (mỗi màu một dòng)</label>
+            <textarea id="colors" name="colors"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="size">Kích thước</label>
+            <input type="text" id="size" name="size" />
+          </div>
+          <div class="form-group">
+            <label for="category">Danh mục *</label>
+            <select id="category" name="category" required>
+              <!-- Được điền động bởi JS -->
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="stockStatus">Tình trạng kho</label>
+            <select id="stockStatus" name="stockStatus">
+              <option value="Còn hàng">Còn hàng</option>
+              <option value="Hết hàng">Hết hàng</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="techInfo">Thông tin kỹ thuật (JSON)</label>
+            <textarea id="techInfo" name="techInfo" placeholder='[{"label": "Chất liệu", "value": "Hợp kim"}, ...]'></textarea>
+          </div>
+          <div class="form-group">
+            <label>Hình ảnh chính</label>
+            <div id="mainImageContainer" class="image-container"></div>
+          </div>
+          <div class="form-group">
+            <label>Video</label>
+            <div id="videoContainer" class="video-container"></div>
+          </div>
+          <div class="form-group">
+            <label>Ảnh thumbnail</label>
+            <div id="thumbnailContainer" class="thumbnail-container"></div>
+            <p style="color: #888">Click vào nút 'Thay ảnh' hoặc 'Thay video' để upload file mới.</p>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-submit">Lưu</button>
+            <button type="button" class="btn btn-cancel" onclick="this.closest('form').reset(); this.parentElement.parentElement.outerHTML = '<div id=\'contentBody\'></div>'; this.switchTab('products')">Hủy</button>
+          </div>
+        </form>
+      </div>
+      <script>
+        document.addEventListener("DOMContentLoaded", () => {
+          const categorySelect = document.getElementById("category");
+          const categories = JSON.parse(localStorage.getItem("categories")) || [];
+          categories.forEach((cat) => {
+            const option = document.createElement("option");
+            option.value = cat.name;
+            option.textContent = cat.name;
+            categorySelect.appendChild(option);
+          });
+        });
+      </script>
+    </template>
+
+    <!-- Users Template -->
+    <template id="usersTemplate">
+      <div class="data-table-container">
+        <div class="table-header">
+          <h3>Danh sách người dùng</h3>
+          <input type="text" placeholder="🔍 Tìm kiếm người dùng..." class="search-input" />
+        </div>
+        <div class="data-table">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Họ tên</th>
+                <th>Email</th>
+                <th>Ngày tham gia</th>
+                <th>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody id="userList"></tbody>
+          </table>
+        </div>
+      </div>
+    </template>
+
+    <!-- User Row Template -->
+    <template id="userRowTemplate">
+      <tr>
+        <td class="user-id"></td>
+        <td class="user-fullname"></td>
+        <td class="user-email"></td>
+        <td class="user-createdAt"></td>
+        <td>
+          <button class="btn-action edit">✏️</button>
+          <button class="btn-action delete">🗑️</button>
+        </td>
+      </tr>
+    </template>
+
+    <!-- Reviews Template -->
+    <template id="reviewsTemplate">
+      <div class="reviews-container">
+        <div class="table-header">
+          <h3>Đánh giá sản phẩm</h3>
+          <select class="filter-select">
+            <option value="all">Tất cả đánh giá</option>
+            <option value="5">5 sao</option>
+            <option value="4">4 sao</option>
+            <option value="3">3 sao</option>
+            <option value="2">2 sao</option>
+            <option value="1">1 sao</option>
+          </select>
+        </div>
+        <div class="reviews-list" id="reviewList"></div>
+      </div>
+    </template>
+
+    <!-- Review Card Template -->
+    <template id="reviewCardTemplate">
+      <div class="review-card">
+        <div class="review-header">
+          <strong class="review-author"></strong>
+          <div class="rating-stars"></div>
+        </div>
+        <p class="review-comment"></p>
+        <span class="review-status"></span>
+        <div class="review-actions">
+          <button class="btn-action approve" style="display: none">✅ Duyệt</button>
+          <button class="btn-action reject" style="display: none">❌ Từ chối</button>
+        </div>
+      </div>
+    </template>
+
+    <!-- Policies Template -->
+    <template id="policiesTemplate">
+      <div class="policies-container">
+        <div class="table-header">
+          <h3>Chính sách</h3>
+        </div>
+        <div class="policies-list" id="policyList"></div>
+      </div>
+    </template>
+
+    <!-- Policy Card Template -->
+    <template id="policyCardTemplate">
+      <div class="policy-card">
+        <div class="policy-header">
+          <h4 class="policy-title"></h4>
+          <div class="policy-actions">
+            <button class="btn-action edit">✏️</button>
+            <button class="btn-action delete">🗑️</button>
+          </div>
+        </div>
+        <div class="policy-details"></div>
+      </div>
+    </template>
+
+    <!-- Modal Template -->
+    <template id="modalTemplate">
+      <div class="modal">
+        <div class="modal-content">
+          <span class="modal-close">×</span>
+          <h2 class="modal-title"></h2>
+          <form class="modal-form">
+            <!-- Form fields will be injected dynamically -->
+          </form>
+        </div>
+      </div>
+    </template>
+
+    <script type="module" src="./js/admin.js"></script>
+  </body>
 </html>

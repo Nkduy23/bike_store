@@ -26,6 +26,8 @@
     "sass": "^1.89.0"
   },
   "dependencies": {
-    "json-server": "^0.17.4"
+    "express": "^5.1.0",
+    "json-server": "^0.17.4",
+    "multer": "^2.0.1"
   }
 }
